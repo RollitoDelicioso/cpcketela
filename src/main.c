@@ -19,9 +19,13 @@
 #include <cpctelera.h>
 #include "state/menu.h"
 //#include "state/game.h"
+#include <entity.h>
 
-void main(void) {
+THero hero;
+
+void main(void){
    	initMenu();
    	//game();
+   	draw_hero(&hero);
 	while(1);
 }
