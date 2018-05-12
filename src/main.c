@@ -17,6 +17,9 @@
 //------------------------------------------------------------------------------
 
 #include <cpctelera.h>
+#include <entity.h>
+
+THero hero;
 
 void main(void) {
    u8* pvmem;  // Pointer to video memory
@@ -24,6 +27,9 @@ void main(void) {
    // Draw String on the middle of the screen
    pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 20, 96);
    cpct_drawStringM1("Welcome to CPCtelera!", pvmem, 1, 0);
+
+   //THero hero;
+   draw_hero(&hero);
 
    // Loop forever
    while (1);
