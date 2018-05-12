@@ -16,12 +16,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
-#include <cpctelera.h>
-#include "state/menu.h"
-//#include "state/game.h"
+#ifndef _GAME_H_
+#define _GAME_H_
 
-void main(void) {
-   	initMenu();
-   	//game();
-	while(1);
-}
+
+#endif

@@ -15,13 +15,3 @@
 //  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
-
-#include <cpctelera.h>
-#include "state/menu.h"
-//#include "state/game.h"
-
-void main(void) {
-   	initMenu();
-   	//game();
-	while(1);
-}
