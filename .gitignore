@@ -1,0 +1,7 @@
+*.cdt
+*.dsk
+*.sna
+obj/
+.DS_Store
+src/sprites/*
+sdasz80.exe.stackdump
