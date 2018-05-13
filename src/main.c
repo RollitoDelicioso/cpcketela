@@ -19,11 +19,12 @@
 #include <cpctelera.h>
 #include "state/menu.h"
 //#include "state/game.h"
-#include <entity.h>
+#include "entity.h"
 
 THero hero;
 
 void main(void){
+	cpct_setVideoMode(1);
    	initMenu();
    	//game();
    	draw_hero(&hero);

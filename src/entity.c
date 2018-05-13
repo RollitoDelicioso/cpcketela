@@ -1,5 +1,5 @@
 #include <cpctelera.h>
-#include <entity.h>
+#include "entity.h"
 
 // Member functions
 void draw_hero(THero* hero){

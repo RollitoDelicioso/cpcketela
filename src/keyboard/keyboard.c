@@ -16,7 +16,43 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
-#include <cpctelera.h>
 #include "keyboard.h"
 
 TKeys keys;
+
+void initKeyboard(){
+    keys.up = Key_W;
+    keys.down = Key_S;
+    keys.left = Key_A;
+    keys.right = Key_D;
+    keys.shot = Key_Space;
+    keys.menu = Key_P;
+}
+
+cpct_keyID waitAKey() {
+    
+    // Backwards bucle to get it finish in 0 (so the compiler will optimize it)
+    u8 i = 10, *keys = cpct_keyboardStatusBuffer + 9;
+    u16 keypressed;
+    
+    // Wait untile a key is pressed.
+    do{
+        cpct_scanKeyboard_f();
+    }
+    while ( ! cpct_isAnyKeyPressed() );
+    
+    // Key detection
+    do {
+        // if in this 8 keys group there is any key pressed, some of their bits will be 0.
+        // else, all values will be 1, and a XOR with 0xFF returns 0 (FALSE).
+        keypressed = *keys ^ 0xFF;
+        if (keypressed)            
+            return (keypressed << 8) + (i - 1);  // Format cpct_keyID: 8 first bits = key maks, the next 8 are the row in keyboard (0-9)
+        keys--;
+    } while(--i);
+}
+void waitReleaseKey(cpct_keyID key){
+    while (cpct_isKeyPressed(key)) {
+        cpct_scanKeyboard_f();
+    }
+}
