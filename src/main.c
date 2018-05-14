@@ -23,7 +23,19 @@
 
 THero hero;
 
+void InterruptServiceRoutine(){
+
+	cpct_scanKeyboard_if();
+}
+
+void settings(){
+
+	cpct_disableFirmware();
+	cpct_setInterruptHandler(InterruptServiceRoutine);
+}
+
 void main(void){
+	settings();
    	initMenu();
    	//game();
    	draw_hero(&hero);
