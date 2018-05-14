@@ -18,15 +18,15 @@
 
 #include <cpctelera.h>
 #include "state/menu.h"
-//#include "state/game.h"
-#include "entity.h"
-
-THero hero;
+#include "state/game.h"
 
 void main(void){
+	
 	cpct_setVideoMode(1);
-   	initMenu();
-   	//game();
-   	draw_hero(&hero);
-	while(1);
+   
+
+   	while(1){
+	   	menu();
+   		game();
+   	}
 }

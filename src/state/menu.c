@@ -19,7 +19,7 @@
 #include "menu.h"
 #include "../keyboard/keyboard.h"
 
-void initMenu(){
+void menu(){
 
 	cpct_keyID key;
 
@@ -29,6 +29,7 @@ void initMenu(){
 	while (1){
 		key = waitAKey();	
 		if(key == Key_1){
+			fillScreen((u8)0);
 			break;
 		}else if(key == Key_2){
 			fillScreen((u8)0);
@@ -97,13 +98,14 @@ void showCredits(){
 
 	u8* pvmem;
 
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 19, 80);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 60);
 	cpct_drawStringM1("Robert Esclapez Garcia", pvmem, 1, 0);
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 40, 100);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 38, 80);
 	cpct_drawStringM1("&", pvmem, 1, 0);
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 19, 120);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 100);
 	cpct_drawStringM1("Jesus Perales Hernandez", pvmem, 1, 0);
 
+	waitReleaseKey(Key_3);
 
 	waitAKey();
 }
