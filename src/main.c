@@ -19,10 +19,9 @@
 #include <cpctelera.h>
 #include "state/menu.h"
 #include "state/game.h"
-#include "entity/entity.h"
+#include "keyboard/keyboard.h"
 
 void InterruptServiceRoutine(){
-
 	cpct_scanKeyboard_if();
 }
 
@@ -34,13 +33,13 @@ void settings(){
 }
 
 void main(void){
-	settings();
-   	//initMenu();
-   	//game();
-   	//draw_hero(&hero);
+	
+//	settings();
+	initKeyboard();
+	cpct_setBorder (2);
 
    	while (1){
-   		menu();
+   		menu();	
    		game();
    	}
 }

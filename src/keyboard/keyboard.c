@@ -21,23 +21,22 @@
 TKeys keys;
 
 void initKeyboard(){
+    keys.left = Key_A;
+    keys.right = Key_D; 
     keys.up = Key_W;
     keys.down = Key_S;
-    keys.left = Key_A;
-    keys.right = Key_D;
-    keys.shot = Key_Space;
     keys.menu = Key_P;
+    keys.shot = Key_Space;
 }
 
 cpct_keyID waitAKey() {
-    
     // Backwards bucle to get it finish in 0 (so the compiler will optimize it)
     u8 i = 10, *keys = cpct_keyboardStatusBuffer + 9;
     u16 keypressed;
     
     // Wait untile a key is pressed.
     do{
-        cpct_scanKeyboard_f();
+        cpct_scanKeyboard();
     }
     while ( ! cpct_isAnyKeyPressed() );
     
@@ -52,7 +51,7 @@ cpct_keyID waitAKey() {
     } while(--i);
 }
 void waitReleaseKey(cpct_keyID key){
-    while (cpct_isKeyPressed(key)) {
-        cpct_scanKeyboard_f();
+    while (cpct_isKeyPressed(key)){
+        cpct_scanKeyboard();
     }
 }

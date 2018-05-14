@@ -20,6 +20,8 @@
 #define _KEYBOARD_H_
 
 #include <cpctelera.h>
+
+
 // Player Key Structure 
 typedef struct {
   cpct_keyID up;
@@ -30,10 +32,10 @@ typedef struct {
   cpct_keyID menu;
 } TKeys;
 
+extern TKeys keys;
 
 cpct_keyID waitAKey();
 void initKeyboard();
 void waitReleaseKey(cpct_keyID key);
-extern TKeys keys;
 
 #endif

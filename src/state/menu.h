@@ -20,10 +20,11 @@
 #define _MENU_H_
 
 #include <cpctelera.h>
+#include "../keyboard/keyboard.h"
 
 void menu();
-void drawMenu();
-void reasignButtons();
-void fillScreen(u8 color);
-void showCredits();
+void draw_menu();
+void reasign_buttons();
+void fill_screen(u8 color);
+void show_credits();
 #endif
