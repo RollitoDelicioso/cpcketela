@@ -18,10 +18,8 @@
 
 #include <cpctelera.h>
 #include "state/menu.h"
-//#include "state/game.h"
-#include <entity.h>
-
-THero hero;
+#include "state/game.h"
+#include "entity/entity.h"
 
 void InterruptServiceRoutine(){
 
@@ -32,12 +30,17 @@ void settings(){
 
 	cpct_disableFirmware();
 	cpct_setInterruptHandler(InterruptServiceRoutine);
+	cpct_setVideoMode(1);
 }
 
 void main(void){
 	settings();
-   	initMenu();
+   	//initMenu();
    	//game();
-   	draw_hero(&hero);
-	while(1);
+   	//draw_hero(&hero);
+
+   	while (1){
+   		menu();
+   		game();
+   	}
 }

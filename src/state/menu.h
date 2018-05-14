@@ -21,6 +21,9 @@
 
 #include <cpctelera.h>
 
-void initMenu();
-
+void menu();
+void drawMenu();
+void reasignButtons();
+void fillScreen(u8 color);
+void showCredits();
 #endif

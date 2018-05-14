@@ -19,11 +19,34 @@
 #include "menu.h"
 #include "../keyboard/keyboard.h"
 
-void initMenu(){
-	u8* pvmem;  // Pointer to video memory
-		
-	// Pointer to memory, width, height   
+void menu(){
 
+	cpct_keyID key;
+
+	initKeyboard();
+
+	drawMenu();
+	while (1){
+		key = waitAKey();	
+		if(key == Key_1){
+			fillScreen((u8)0);
+			break;
+		}else if(key == Key_2){
+			fillScreen((u8)0);
+			reasignButtons(); 
+			fillScreen((u8)0);
+			drawMenu();
+		}else if(key == Key_3){
+			fillScreen((u8)0);
+			showCredits();
+			fillScreen((u8)0);
+			drawMenu();
+		}
+	}
+}
+
+void drawMenu(){
+	u8* pvmem;
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 20, 20);
 	cpct_drawStringM1("Welcome to CPCKetela!", pvmem, 1, 0);
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 15, 55);
@@ -34,13 +57,55 @@ void initMenu(){
 	cpct_drawStringM1("2: Reasign buttons", pvmem, 1, 0);
 	pvmem += 0x50 + 0x50;
 	cpct_drawStringM1("3: Credits", pvmem, 1, 0);	
+}
 
-	while (1/*true*/){
+void fillScreen(u8 color){
+	cpct_drawSolidBox((void*)0xC000, color, 64, 240);
+}
 
-		cpct_scanKeyboard_f();
-		//cpct_scanKeyboard(); If memory is required uncomment this line, and comment the above one.
-		if (cpct_isKeyPressed(Key_1)){
-        	break;
-    	}
-	}
+void reasignButtons(){
+
+	u8* pvmem;
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 35, 100);
+
+	cpct_drawStringM1("Up!", pvmem, 1, 0);
+	waitReleaseKey(Key_2);
+	keys.up = waitAKey();
+	waitReleaseKey(keys.up);
+
+	cpct_drawStringM1("Down!", pvmem, 1, 0);
+	keys.down = waitAKey(); 
+	waitReleaseKey(keys.down);
+
+	cpct_drawStringM1("Left!", pvmem, 1, 0);
+	keys.left = waitAKey(); 
+	waitReleaseKey(keys.left);
+
+	cpct_drawStringM1("Right!", pvmem, 1, 0);
+	keys.right = waitAKey(); 
+	waitReleaseKey(keys.right);
+	
+	cpct_drawStringM1("Shot! ", pvmem, 1, 0);
+	keys.shot = waitAKey(); 
+	waitReleaseKey(keys.shot);
+	
+	cpct_drawStringM1("Menu!", pvmem, 1, 0);
+	keys.menu = waitAKey(); 
+	waitReleaseKey(keys.menu);
+}
+
+void showCredits(){
+
+	u8* pvmem;
+
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 60);
+	cpct_drawStringM1("Robert Esclapez Garcia", pvmem, 1, 0);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 38, 80);
+	cpct_drawStringM1("&", pvmem, 1, 0);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 100);
+	cpct_drawStringM1("Jesus Perales Hernandez", pvmem, 1, 0);
+
+	waitReleaseKey(Key_3);
+
+	waitAKey();
 }
