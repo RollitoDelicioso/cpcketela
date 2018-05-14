@@ -16,6 +16,34 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
+#include "game.h"
+
+THero hero;
+
+void delete_all(){
+	erase_hero(&hero);
+}
+
+void update_all(){
+	update_hero(&hero);
+}
+
+void draw_all(){
+	draw_hero(&hero);
+}
+
 void game(){
 	
+	init_hero(&hero);
+	
+	while(1){
+		delete_all();
+
+		update_all();
+
+		draw_all();
+		
+		cpct_waitVSYNC();
+	}
 }
+

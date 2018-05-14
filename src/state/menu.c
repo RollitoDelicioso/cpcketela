@@ -17,35 +17,36 @@
 //------------------------------------------------------------------------------
 
 #include "menu.h"
-#include "../keyboard/keyboard.h"
 
 void menu(){
 
-	cpct_keyID key;
-
-	initKeyboard();
-
-	drawMenu();
+	draw_menu();
 	while (1){
-		key = waitAKey();	
-		if(key == Key_1){
-			fillScreen((u8)0);
+		cpct_scanKeyboard();
+		if(cpct_isKeyPressed(Key_1)){
+
+			cpct_clearScreen_f64(0);
 			break;
-		}else if(key == Key_2){
-			fillScreen((u8)0);
-			reasignButtons(); 
-			fillScreen((u8)0);
-			drawMenu();
-		}else if(key == Key_3){
-			fillScreen((u8)0);
-			showCredits();
-			fillScreen((u8)0);
-			drawMenu();
+		
+		}else if(cpct_isKeyPressed(Key_2)){
+
+			reasign_buttons(); 
+			draw_menu();
+		
+		}else if(cpct_isKeyPressed(Key_3)){
+
+			show_credits();
+			draw_menu();
+
+			while(cpct_isAnyKeyPressed()){
+				cpct_scanKeyboard();
+			};
+
 		}
 	}
 }
 
-void drawMenu(){
+void draw_menu(){
 	u8* pvmem;
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 20, 20);
 	cpct_drawStringM1("Welcome to CPCKetela!", pvmem, 1, 0);
@@ -59,14 +60,15 @@ void drawMenu(){
 	cpct_drawStringM1("3: Credits", pvmem, 1, 0);	
 }
 
-void fillScreen(u8 color){
+void fill_screen(u8 color){
 	cpct_drawSolidBox((void*)0xC000, color, 64, 240);
 }
 
-void reasignButtons(){
+void reasign_buttons(){
 
-	u8* pvmem;
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 35, 100);
+	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 35, 100);;
+
+	cpct_clearScreen_f64(0);
 
 	cpct_drawStringM1("Up!", pvmem, 1, 0);
 	waitReleaseKey(Key_2);
@@ -92,13 +94,16 @@ void reasignButtons(){
 	cpct_drawStringM1("Menu!", pvmem, 1, 0);
 	keys.menu = waitAKey(); 
 	waitReleaseKey(keys.menu);
+
+	cpct_clearScreen_f64(0);
 }
 
-void showCredits(){
+void show_credits(){
 
-	u8* pvmem;
+	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 60);
+	
+	cpct_clearScreen_f64(0);
 
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 60);
 	cpct_drawStringM1("Robert Esclapez Garcia", pvmem, 1, 0);
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 38, 80);
 	cpct_drawStringM1("&", pvmem, 1, 0);
@@ -108,4 +113,5 @@ void showCredits(){
 	waitReleaseKey(Key_3);
 
 	waitAKey();
+	cpct_clearScreen_f64(0);
 }

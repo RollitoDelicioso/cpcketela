@@ -19,6 +19,12 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
+#include <cpctelera.h>
+#include "../entity/entity.h"
+
 void game();
+void erase_all();
+void update_all();
+void draw_all();
 
 #endif
