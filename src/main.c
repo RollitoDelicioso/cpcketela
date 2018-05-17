@@ -36,8 +36,6 @@ void main(void){
 	
 //	settings();
 	initKeyboard();
-	cpct_setBorder (2);
-
    	while (1){
    		menu();	
    		game();
