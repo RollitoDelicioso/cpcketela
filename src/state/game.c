@@ -18,32 +18,36 @@
 
 #include "game.h"
 
-THero hero;
 
-void delete_all(){
-	erase_hero(&hero);
+
+void erase_all(){
+	erase_hero();
+	erase_bullets();
 }
 
 void update_all(){
-	update_hero(&hero);
+	update_hero();
+	update_bullets();
 }
 
 void draw_all(){
-	draw_hero(&hero);
+	draw_hero();
+	draw_bullets();
+}
+
+void run_engine(){
+	erase_all();
+	update_all();
+	draw_all();
+	cpct_waitVSYNC();
 }
 
 void game(){
 	
-	init_hero(&hero);
+	init_hero();
 	
 	while(1){
-		delete_all();
-
-		update_all();
-
-		draw_all();
-		
-		cpct_waitVSYNC();
+		run_engine();		
 	}
 }
 
