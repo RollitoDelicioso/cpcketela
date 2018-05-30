@@ -27,4 +27,6 @@ void erase_all();
 void update_all();
 void draw_all();
 
+extern u8 x_offset, y_offset;
+
 #endif

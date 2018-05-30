@@ -51,7 +51,7 @@ void main(void){
     //cpct_etm_drawTileBox2x4(0, 0, 40, 46, 120, CPCT_VMEM_START, g_building);
 
     //	settings();
-    //initKeyboard();
+    initKeyboard();
 
     while (1){
 

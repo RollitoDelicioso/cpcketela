@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "state/game.h"
 #include "video/video.h"
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
@@ -7,9 +8,9 @@
 
 
 THero hero;
-const TEnemy enemies[MAX_ENEMIES_SCREEN] = { {60,100,0,0,5}, {30,50,0,0,5} };
-const TBullets bullet_hero = {0xFF,0,0,0,0};
-const TBullets bullets_enemies[MAX_BULLETS_ENEMY] = {{0xFF,0,0,0,0}, {0xFF,0,0,0,0}, {0xFF,0,0,0,0}};
+const TEnemy enemies[MAX_ENEMIES_SCREEN] = { {60,100,5}, {30,50,5} };
+const TBullets bullet_hero = {0xFF,0,0};
+const TBullets bullets_enemies[MAX_BULLETS_ENEMY] = {{0xFF,0,0}, {0xFF,0,0}, {0xFF,0,0}};
 const u8 n_hero_bullets_on_screen = 0;
 const u8 n_enemy_bullets_on_screen = 0;
 
@@ -17,22 +18,13 @@ void update_enemies_aux(){
 
 }
 
-void erase_enemies_aux(TEnemy* enemy){
-	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, enemy->x, enemy->y), 0, ENEMY_WIDTH, ENEMY_HEIGHT);	
-}
-
 void draw_enemies_aux(TEnemy* enemy){
-	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, enemy->x, enemy->y), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
-}
+	cpct_drawSolidBox(
+		cpct_getScreenPtr(CPCT_VMEM_START, enemy->x - x_offset, enemy->y - y_offset), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
+}	
 
 void update_enemies(){
-}
 
-void erase_enemies(){
-	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
-		if(enemies[i].lives != 0)
-			erase_enemies_aux(&enemies[i]);
-	}
 }
 
 void draw_enemies(){
@@ -44,6 +36,8 @@ void draw_enemies(){
 
 
 void init_hero(){
+	hero.x = 40;
+	hero.y = 30;
 	hero.lives = 5;
 }
 
@@ -106,10 +100,6 @@ void update_hero(){
 
 void draw_hero(){
 	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, hero.x, hero.y), 130, HERO_WIDTH, HERO_HEIGHT);
-}
-
-void erase_hero(){
-	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, hero.x, hero.y), 0, HERO_WIDTH, HERO_HEIGHT);	
 }
 
 
@@ -312,18 +302,6 @@ void draw_bullets(){
 
 }
 
-void erase_bullets(){
-	if(bullet_hero.x != 0xFF)
-		cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, bullet_hero.x, bullet_hero.y), 0, BULLETS_WIDTH, BULLETS_HEIGHT);
-	
-	/*u8 i = MAX_BULLETS_HERO-1;
-	do {
-		if(bullets_hero[i].x != 0xFF){
-			cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, bullets_hero[i].x, bullets_hero[i].y), 0, BULLETS_WIDTH, BULLETS_HEIGHT);
-		}
-    } while(i--);*/
-}
-
 // who: 0 -> hero, who: 1 -> enemy
 void shot(u8 who){
 	u8* n_bullets;
@@ -371,9 +349,5 @@ void fill_spot_bullet(TBullets* array_bullets){
 	raw_pointer_bullets += 1;
 	(*raw_pointer_bullets) = hero.y;
 	raw_pointer_bullets += 1;
-	(*raw_pointer_bullets) = hero.px;
-	raw_pointer_bullets += 1;
-	(*raw_pointer_bullets) = hero.py;
-	raw_pointer_bullets += 1;	
 	(*raw_pointer_bullets) = hero.ldf; //72t more bytes
 }

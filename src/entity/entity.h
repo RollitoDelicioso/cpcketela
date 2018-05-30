@@ -8,8 +8,6 @@
 typedef struct {
 	u8 x;
 	u8 y;
-	u8 px;	// Previous x
-	u8 py;	// Previous y
 	u8 ldf; // L.D.F (Last Direcction Faced) To know witch direction should face the bullet.
 			// 0: up, 1: down, 2: left, 3: right, 4:up-left, 5:up-right, 6:down-left, 7:down-right
 	u8 lives;
@@ -18,16 +16,12 @@ typedef struct {
 typedef struct {
 	u8 x;
 	u8 y;
-	u8 px;
-	u8 py;
 	u8 lives;
 } TEnemy;
 
 typedef struct {
 	u8 x; // -1 Means that the bullet is not going to be processed"
 	u8 y;
-	u8 px;
-	u8 py;
 	u8 dir; // Direction of the bullet
 		//0: right
 } TBullets;
@@ -37,21 +31,17 @@ typedef struct {
 
 // Hero
 void update_hero();
-void erase_hero();
-//void erase_herop(u16 offset);
 void draw_hero();
 void init_hero();
 
 //Enemies
 void update_enemies();
-void erase_enemies();
 void draw_enemies();
 
 
 //Bullets
 void check_collisions();
 void update_bullets();
-void erase_bullets();
 void draw_bullets();
 void shot(u8 who);
 void fill_spot_bullet(TBullets* array_bullets);
