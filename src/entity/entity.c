@@ -1,4 +1,10 @@
 #include "entity.h"
+#include "video/video.h"
+#include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
+#include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
+//#include <maps/frame_updown.h>      // Automatically generated g_frame_ud tilemap declarations
+//#include <maps/frame_leftright.h>   // Automatically generated g_frame_lr tilemap declarations
+
 
 THero hero;
 TEnemy enemies[MAX_ENEMIES_SCREEN];
@@ -77,6 +83,12 @@ void draw_hero(){
 void erase_hero(){
 	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, hero.x, hero.y), 0, HERO_WIDTH, HERO_HEIGHT);	
 }
+
+// Prueba
+/*void erase_herop(u16 offset){
+	//cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, hero.x, hero.y), 0, HERO_WIDTH, HERO_HEIGHT);	
+	cpct_etm_drawTileBox2x4(hero.x, hero.y, HERO_WIDTH, HERO_HEIGHT, g_building_W, video_getBackBufferPtr() + VIEWPORT_OFFSET, g_building + offset);
+}*/
 
 void update_bullets(){
 	u8 i = MAX_BULLETS_HERO-1;

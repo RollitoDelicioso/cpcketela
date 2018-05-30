@@ -23,9 +23,16 @@
 ## PNG, GIF, etc. into C-arrays.                                          ##
 ############################################################################
 
-## Example firmware palette definition as variable in cpct_img2tileset format
-
-# PALETTE={0 1 3 4 7 9 10 12 13 16 19 20 21 24 25 26}
+# DEFINE PALETTE
+# 16-colours mode 0 palette used in this example. This values are 
+# firmware color values. You may consult this colour values at 
+# http://lronaldo.github.io/cpctelera/files/video/cpct_setPalette-asm.html
+#  1: Blue            0: Black             2: Bright Blue      3: Red
+#  6: Bright Red      9: Green            11: Sky Blue        13: White
+# 15: Orange         18: Bright Green     19: Sea Green       20: Bright Cyan
+# 21: Lime           22: Pastel Green     23: Pastel Cyan     24: Bright Yellow
+PALETTE={1 0 2 3 6 9 11 13 15 18 19 20 21 22 23 24}
+#PALETTE={ 0 6 13 10 12 3 9 18 26 15 25 1 14 }
 
 ## AUTOMATED IMAGE CONVERSION EXAMPLE (Uncomment EVAL line to use)
 ##
@@ -35,6 +42,9 @@
 ##    The palette used for conversion is given through the PALETTE variable and
 ##    a pre_palette[16] array will be generated with the 16 palette colours as 
 ##	  hardware colour values.
+
+$(eval $(call IMG2SPRITES,img/tileset.png,0,g,8,8,$(PALETTE),zgtiles,src/tilemap/,hwpalette,))
+#$(eval $(call IMG2SPRITES,img/tiles.png,0,g,4,4,$(PALETTE),tileset,src/tilemap/,hwpalette))
 
 #$(eval $(call IMG2SPRITES,img/example.png,0,pre,24,12,$(PALETTE),mask,src/,hwpalette))
 

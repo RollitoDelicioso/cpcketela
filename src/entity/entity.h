@@ -37,6 +37,7 @@ typedef struct {
 
 void update_hero();
 void erase_hero();
+//void erase_herop(u16 offset);
 void draw_hero();
 void init_hero();
 

@@ -23,6 +23,29 @@
 ## original files (like Tiled .tmx) into C-arrays.                        ##
 ############################################################################
 
+## AUTOMATED TILEMAP CONVERSIONS
+##
+## We automatically convert 3 tilemaps into arrays: 
+##	- img/frame_updown.tmx 		(Upper and Lower parts of the Fixed Frame)
+##	- img/frame_leftright.tmx   (Left and Right parts of the Fixed Frame)
+##	- img/building.tmx 			(Building tilemap that will be scrolled inside the frame)
+##
+
+## CONVERT: img/building.tmx to src/maps/building.c & src/maps/building.h
+##	Generates a g_building C-Array, with 1-byte tile indexes defining the building
+$(eval $(call TMX2C,img/building.tmx,g_building,src/tilemap/,))
+
+## CONVERT: img/frame_updown.tmx to src/maps/frame_updown.c & src/maps/frame_updown.h
+##	Generates a g_frame_ud C-Array, with 1-byte tile indexes defining Upper and Lower parts of the frame
+#$(eval $(call TMX2C,img/frame_updown.tmx,g_frame_ud,src/maps/,))
+
+## CONVERT: img/frame_leftright.tmx to src/maps/frame_leftright.c & src/maps/frame_leftright.h
+##	Generates a g_frame_lr C-Array, with 1-byte tile indexes defining Left and Right parts of the frame
+#$(eval $(call TMX2C,img/frame_leftright.tmx,g_frame_lr,src/maps/,))
+
+
+
+
 ## TILEMAP CONVERSION EXAMPLES (Uncomment EVAL lines to use)
 ##
 
