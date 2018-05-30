@@ -29,7 +29,7 @@ void settings(){
 
 	cpct_disableFirmware();
 	cpct_setInterruptHandler(InterruptServiceRoutine);
-	cpct_setVideoMode(1);
+	cpct_setVideoMode(0);
 }
 
 void main(void){

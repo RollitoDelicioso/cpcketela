@@ -23,16 +23,20 @@
 void erase_all(){
 	erase_hero();
 	erase_bullets();
+	erase_enemies();
 }
 
 void update_all(){
 	update_hero();
 	update_bullets();
+	update_enemies();
 }
 
 void draw_all(){
+
 	draw_hero();
 	draw_bullets();
+	draw_enemies();
 }
 
 void run_engine(){
@@ -46,8 +50,8 @@ void game(){
 	
 	init_hero();
 	
-	while(1){
-		run_engine();		
+	while(hero.lives != 0){
+		run_engine();
 	}
 }
 
