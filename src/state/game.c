@@ -31,16 +31,20 @@
 void erase_all(){
 	erase_hero();
 	erase_bullets();
+	erase_enemies();
 }
 
 void update_all(){
 	update_hero();
 	update_bullets();
+	update_enemies();
 }
 
 void draw_all(){
+
 	draw_hero();
 	draw_bullets();
+	draw_enemies();
 }
 
 void run_engine(){
@@ -172,8 +176,7 @@ void game(){
    //cpct_etm_drawTileBox2x4(0, 0, 40, 46, 120, CPCT_VMEM_START, g_building);
    map_load((u8*) &maps_000);
 
-	
-	while (true){
+	while (hero.lives != 0){
 		//run_engine();
 		// Draw the viewport scrolled inside the g_building tilemap 
       // up to the current movement offset

@@ -33,8 +33,9 @@ void settings(){
 	cpct_disableFirmware();
 	cpct_setInterruptHandler(InterruptServiceRoutine);
 	cpct_setVideoMode(0);
-    cpct_setPalette(g_palette, 16);  // Set our own colours defined en g_palette (automatically generated in maps/tileset.c)
-    cpct_setBorder(HW_BLUE);         // Set border same as background colour: BLUE
+  cpct_setPalette(g_palette, 16);  // Set our own colours defined en g_palette (automatically generated in maps/tileset.c)
+  cpct_setBorder(HW_BLUE);         // Set border same as background colour: BLUE
+
 }
 
 void main(void){

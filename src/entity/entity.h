@@ -24,36 +24,45 @@ typedef struct {
 } TEnemy;
 
 typedef struct {
-	u8 x; // -1 Means it is not been "processed"
+	u8 x; // -1 Means that the bullet is not going to be processed"
 	u8 y;
-	u8 direction; // Direction of the bullet
-		//0: right
 	u8 px;
 	u8 py;
+	u8 dir; // Direction of the bullet
+		//0: right
 } TBullets;
-
 
 // Member functions
 
+
+// Hero
 void update_hero();
 void erase_hero();
 //void erase_herop(u16 offset);
 void draw_hero();
 void init_hero();
 
+//Enemies
+void update_enemies();
+void erase_enemies();
+void draw_enemies();
 
+
+//Bullets
+void check_collisions();
 void update_bullets();
 void erase_bullets();
 void draw_bullets();
-
-
 void shot(u8 who);
-void fill_spot(TBullets* array_bullets);
+void fill_spot_bullet(TBullets* array_bullets);
+
 
 extern THero hero;
-extern TEnemy enemies[MAX_ENEMIES_SCREEN];
-extern const TBullets bullets_hero[MAX_BULLETS_HERO];
-extern TBullets bullets_enemies[MAX_BULLETS_ENEMY];
+extern const TEnemy enemies[MAX_ENEMIES_SCREEN];
+extern const TBullets bullet_hero;
+extern const TBullets bullets_enemies[MAX_BULLETS_ENEMY];
+extern const u8 n_hero_bullets_on_screen;
+extern const u8 n_hero_enemy_on_screen;
 
 
 #endif
