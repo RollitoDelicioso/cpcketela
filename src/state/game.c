@@ -43,15 +43,15 @@ void draw_all(){
 	cpct_etm_drawTilemap4x8_ag(vmem, g_building + offset);
 
 	draw_enemies();
+	draw_objects();
 	draw_hero();
-	draw_bullets();
+  draw_bullets();
 }
 
 void run_engine(){
 
 	update_all();
 	draw_all();
-
 	// After drawing the tilemap, switch video buffers to display recently drawn backbuffer
 	video_switchBuffers();
 }
@@ -81,11 +81,6 @@ void drawBuidlingScrolled(u16 offset){
 }
 
 void initialize() {
-   //cpct_disableFirmware();          // We use own mode and colours, firmware must be disabled
-   //cpct_setVideoMode(0);            // Set video mode 0 (160x200 pixels, 20x25 characters, 16 colours)
-   //cpct_setPalette(g_palette, 13);  // Set our own colours defined en g_palette (automatically generated in maps/tileset.c)
-   //cpct_setBorder(HW_BLUE);         // Set border same as background colour: BLUE
-
    // DRAW SCROLL FRAME ON BOTH SCREEN BUFFERS
    //   This frame will stay the same during all redraws, and hence we draw it
    // only once on both video buffers. After that, we will only redraw the scrolling
@@ -99,19 +94,20 @@ void initialize() {
 
 }
 
+void gameOver(){
+	cpct_clearScreen_f64(0);
+}
+
 void game(){
 
 	init_hero();
 	initialize();
 
-    map_load((u8*) &maps_000);
+  map_load((u8*) &maps_000);
 
-	while (hero.lives != 0){
-
+	while (hero.lives > 0){
 		run_engine();
-		// Draw the viewport scrolled inside the g_building tilemap 
-		// up to the current movement offset
-		//drawBuidlingScrolled(offset);
 	}
+	gameOver();
 }
 

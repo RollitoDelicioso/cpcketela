@@ -44,8 +44,8 @@ void main(void){
     // First buffer: 0x8000 - 0xBFFF
     // Second buffer: 0xC000 - 0xFFFF
     // Stack: 0x8000 (backwards)
-    cpct_setStackLocation((void*) 0x8000);
-    settings();
+    //cpct_setStackLocation((void*) 0x8000);
+    //settings();
     //video_initBuffers();    // Initialize screen video buffers
     //cpct_etm_setTileset2x4(g_tileset);
     //cpct_etm_drawTileBox2x4(0, 0, 40, 46, 120, CPCT_VMEM_START, g_building);
@@ -55,7 +55,7 @@ void main(void){
 
     while (1){
 
-        //menu();	
+        menu();	
         game();
     }
 }
