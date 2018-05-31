@@ -18,22 +18,16 @@ const u8 n_hero_bullets_on_screen = 0;
 const u8 n_enemy_bullets_on_screen = 0;	
 
 void spawn_enemy(u8* enemy){
-	TEnemy *pe;
-	u8 *p,*p2;
+	TEnemy *p,*p2;
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
-		if(enemies[i].lives == 0){
+		if(enemies[i].lives == 0){			
+			p = &enemies[i];
+			p2 = (TEnemy*)enemy;
 			
-			p = (u8*)&enemies[i];
-			p2 = enemy;
-
-			(*p) = (*enemy);
-			p++;
-			enemy++;
-			(*p) = (*enemy);
-			p += 4;
-			(*p)++;
-			pe = &enemies[i];
-			pe->perform_action = chase_hero;
+			p->x = p2->x;
+			p->y = p2->y;
+			p->lives++;
+			p->perform_action = chase_hero;
 		}
 	}
 }
@@ -42,14 +36,16 @@ void chase_hero(u8* enemy){
 	u8* p = enemy;
 	if(hero.x < (*p)){
 		(*p)--; 
+		(*p)--; 
 	}else{
+		(*p)++;
 		(*p)++;
 	}
 	p++;
 	if(hero.y < (*p)){
-		(*p) -= 2; 
+		(*p) -= 4; 
 	}else{
-		(*p) += 2;
+		(*p) += 4;
 	}
 }
 
@@ -95,10 +91,10 @@ void update_enemies(){
 
 void draw_enemies(){
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
-		if(enemies[i].lives != 0){
-			if (video_isInsideViewport(screen_x, screen_y, enemy->x, enemy->y, ENEMY_WIDTH, ENEMY_HEIGHT)){
-		    cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), enemies[i].x - screen_x, enemies[i].y - screen_y), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
-	    }
+		if(enemies[i].lives > 0){
+			if (video_isInsideViewport(screen_x, screen_y, enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT)){
+		    	cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), enemies[i].x - screen_x, enemies[i].y - screen_y), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
+	    	}
 		}
 	}
 }
@@ -106,7 +102,9 @@ void draw_enemies(){
 void draw_objects(){
 	for(u8 i=0;i<MAX_OBJECTS_SCREEN;++i){
 		if(objects[i].picked == 0){
-			cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, objects[i].x, objects[i].y), 53, OBJECT_WIDTH, OBJECT_HEIGHT);
+			if (video_isInsideViewport(screen_x, screen_y, objects[i].x, objects[i].y, OBJECT_WIDTH, OBJECT_HEIGHT)){
+		    	cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), objects[i].x - screen_x, objects[i].y - screen_y), 53, OBJECT_WIDTH, OBJECT_HEIGHT);
+	    	}
 		}
 	}
 }
@@ -222,12 +220,7 @@ void update_hero(){
 }
 
 void draw_hero(){
-
-	// Calcular relativa de hero
-	u8 hero_x_relative = hero.x - screen_x;
-	u8 hero_y_relative = hero.y - screen_y;
-
-	cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), hero_x_relative, hero_y_relative), 130, HERO_WIDTH, HERO_HEIGHT);
+	cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(),hero.x - screen_x, hero.y - screen_y), 130, HERO_WIDTH, HERO_HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -413,11 +406,12 @@ void check_collision_bullets_enemies(){
 }
 
 void check_collision_enemies_hero(){
-	u8* p;
+	TEnemy* p;
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
 		if(enemies[i].lives > 0 && check_collision_items((u8*)&enemies[i], ENEMY_HEIGHT, ENEMY_WIDTH, (u8*)&hero, HERO_HEIGHT, HERO_WIDTH)){
-			p = &enemies[i].lives;
-			(*p) = 0;
+			p = &enemies[i];
+			
+			p->lives = 0;
 			hero.lives--;
 		}
 	}	
@@ -447,26 +441,8 @@ void update_bullets(){
 
 void draw_bullets(){
 
-	// bullet_hero.dir
 	// 0: up, 1: down, 2: left, 3: right, 4:up-left, 5:up-right, 6:down-left, 
-
 	if (bullet_hero.x != 0xFF){
-
-		/*switch (bullet_hero.dir){
-
-			case 0:
-				cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x, bullet_hero.y + screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);
-				break;
-			case 1:
-				cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x, bullet_hero.y - screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);
-				break;
-			case 2:
-				cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x - screen_x, bullet_hero.y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);
-				break;
-			case 3:
-				cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x + screen_x, bullet_hero.y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);
-				break;
-		}*/
 		cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x - screen_x, bullet_hero.y - screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);	
 	}
 	

@@ -60,10 +60,6 @@ void draw_menu(){
 	cpct_drawStringM1("3: Credits", pvmem, 1, 0);	
 }
 
-void fill_screen(u8 color){
-	cpct_drawSolidBox((void*)0xC000, color, 64, 240);
-}
-
 void reasign_buttons(){
 
 	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 35, 100);;

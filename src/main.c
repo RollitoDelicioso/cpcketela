@@ -35,7 +35,6 @@ void settings(){
 	cpct_setVideoMode(0);
     cpct_setPalette(g_palette, 16);  // Set our own colours defined en g_palette (automatically generated in maps/tileset.c)
     cpct_setBorder(HW_BLUE);         // Set border same as background colour: BLUE
-
 }
 
 void main(void){
@@ -44,17 +43,11 @@ void main(void){
     // First buffer: 0x8000 - 0xBFFF
     // Second buffer: 0xC000 - 0xFFFF
     // Stack: 0x8000 (backwards)
-    //cpct_setStackLocation((void*) 0x8000);
-    //settings();
-    //video_initBuffers();    // Initialize screen video buffers
-    //cpct_etm_setTileset2x4(g_tileset);
-    //cpct_etm_drawTileBox2x4(0, 0, 40, 46, 120, CPCT_VMEM_START, g_building);
-
-    //	settings();
+    cpct_setStackLocation((void*) 0x8000);
+    settings();
     initKeyboard();
 
     while (1){
-
         menu();	
         game();
     }

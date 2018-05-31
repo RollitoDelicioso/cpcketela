@@ -13,7 +13,7 @@
 #define BULLETS_HEIGHT 1
 
 #define OBJECT_WIDTH 4
-#define OBJECT_HEIGHT 4
+#define OBJECT_HEIGHT 16
 
 #define MAX_ENEMIES_SCREEN 4
 

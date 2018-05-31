@@ -45,39 +45,14 @@ void draw_all(){
 	draw_enemies();
 	draw_objects();
 	draw_hero();
-  draw_bullets();
+  	draw_bullets();
 }
 
 void run_engine(){
-
 	update_all();
 	draw_all();
 	// After drawing the tilemap, switch video buffers to display recently drawn backbuffer
 	video_switchBuffers();
-}
-
-////////////////////////////////////////////////////////////////////////////////////
-// DRAW BUILDING SCROLLED
-//    This function draws the scrolling background inside the frame, which is a 
-// building. The parameter offset controls the offset at which the viewport to 
-// be drawn is located, inside the g_building tilemap. By changing offset, different
-// viewports are drawn, and a scrolling effect can be performed.
-//
-void drawBuidlingScrolled(u16 offset){
-   // vmem points to the place in present hardware backbuffer where the viewport
-   // is to be drawn. This place is the same inside a given hardware backbuffer,
-   // and hence we can have a pre-calculated VIEWPORT_OFFSET to directly add to
-   // the start of the current hardware backbuffer in memory 
-   //u8* vmem = video_getBackBufferPtr() + VIEWPORT_OFFSET;
-   u8* vmem = video_getBackBufferPtr() + VIEWPORT_OFFSET;
-
-   // DRAW THE g_building TILEMAP SCROLLED
-   //    Scroll is controlled by offset, which is just representing the index of the first
-   // tile inside the g_building tilemap that has to be drawn. 
-   cpct_etm_drawTilemap4x8_ag(vmem, g_building + offset);
-
-   // After drawing the tilemap, switch video buffers to display recently drawn backbuffer
-   video_switchBuffers();
 }
 
 void initialize() {
@@ -91,7 +66,7 @@ void initialize() {
    // internal values will always be the same (same tileset, tilemap and viewport size), we 
    // set them only once here, and then we just call the drawing function each time we need it.
    cpct_etm_setDrawTilemap4x8_ag(VIEWPORT_W, VIEWPORT_H, g_building_W, g_tileset_00);
-
+   screen_y = scroll_y = screen_x = scroll_x = offset = 0;
 }
 
 void gameOver(){
@@ -102,8 +77,7 @@ void game(){
 
 	init_hero();
 	initialize();
-
-  map_load((u8*) &maps_000);
+	map_load((u8*) &maps_000);
 
 	while (hero.lives > 0){
 		run_engine();
