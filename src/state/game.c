@@ -35,12 +35,14 @@ void update_all(){
 void draw_all(){
 	draw_hero();
 	draw_bullets();
+	draw_objects();
 	draw_enemies();
 }
 
 void run_engine(){
 	update_all();
 	draw_all();
+	cpct_waitVSYNC();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -68,11 +70,6 @@ void drawBuidlingScrolled(u16 offset){
 }
 
 void initialize() {
-   //cpct_disableFirmware();          // We use own mode and colours, firmware must be disabled
-   //cpct_setVideoMode(0);            // Set video mode 0 (160x200 pixels, 20x25 characters, 16 colours)
-   //cpct_setPalette(g_palette, 13);  // Set our own colours defined en g_palette (automatically generated in maps/tileset.c)
-   //cpct_setBorder(HW_BLUE);         // Set border same as background colour: BLUE
-
    // DRAW SCROLL FRAME ON BOTH SCREEN BUFFERS
    //   This frame will stay the same during all redraws, and hence we draw it
    // only once on both video buffers. After that, we will only redraw the scrolling
@@ -86,21 +83,25 @@ void initialize() {
 
 }
 
+void gameOver(){
+	cpct_clearScreen_f64(0);
+}
+
 void game(){
 
 	u16 offset = 0;  // Offset in tiles of the start of the view window in the g_building tilemap
 	u8 x = 0, y = 0;
 
 	init_hero();
-	initialize();
+	//initialize();
 
-    map_load((u8*) &maps_000);
+    //map_load((u8*) &maps_000);
 
-	while (hero.lives != 0){
+	while (hero.lives > 0){
 		run_engine();
 		// Draw the viewport scrolled inside the g_building tilemap 
 		// up to the current movement offset
-		drawBuidlingScrolled(offset);
+	/*	drawBuidlingScrolled(offset);
 
 
 		// Check user input and update offset accordingly (OPQA for movement)
@@ -121,6 +122,8 @@ void game(){
 		if (cpct_isKeyPressed(Key_D) && x < g_building_W - VIEWPORT_W) { ++x; x_offset += 8; ++offset; }
 		if (cpct_isKeyPressed(Key_W) && y > 0)                         { --y; y_offset -= 8; offset -= g_building_W; }
 		if (cpct_isKeyPressed(Key_S) && y < g_building_H - VIEWPORT_H) { ++y; y_offset += 8; offset += g_building_W; }	
+	*/
 	}
+	gameOver();
 }
 

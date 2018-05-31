@@ -3,46 +3,118 @@
 #include "video/video.h"
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
-//#include <maps/frame_updown.h>      // Automatically generated g_frame_ud tilemap declarations
-//#include <maps/frame_leftright.h>   // Automatically generated g_frame_lr tilemap declarations
 
+void chase_hero(u8*);
+void increase_heal(u8*);
+void spawn_enemy(u8*);
 
 THero hero;
-const TEnemy enemies[MAX_ENEMIES_SCREEN] = { {60,100,5}, {30,50,5} };
-const TBullets bullet_hero = {0xFF,0,0};
-const TBullets bullets_enemies[MAX_BULLETS_ENEMY] = {{0xFF,0,0}, {0xFF,0,0}, {0xFF,0,0}};
+const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{60,100,chase_hero,0,1}, {30,50,chase_hero,0,1}, {40,120,spawn_enemy,0,1}, {70,50,chase_hero,0,1}};
+const TBullet bullet_hero = {0xFF,0,0};
+const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {{0xFF,0,0}, {0xFF,0,0}, {0xFF,0,0}};
+const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,increase_heal}, {10,100,0,increase_heal}};
 const u8 n_hero_bullets_on_screen = 0;
-const u8 n_enemy_bullets_on_screen = 0;
+const u8 n_enemy_bullets_on_screen = 0;	
 
-void update_enemies_aux(){
+void spawn_enemy(u8* enemy){
+	TEnemy *pe;
+	u8 *p,*p2;
+	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
+		if(enemies[i].lives == 0){
+			
+			p = (u8*)&enemies[i];
+			p2 = enemy;
 
+			(*p) = (*enemy);
+			p++;
+			enemy++;
+			(*p) = (*enemy);
+			p += 4;
+			(*p)++;
+			pe = &enemies[i];
+			pe->perform_action = chase_hero;
+		}
+	}
 }
 
-void draw_enemies_aux(TEnemy* enemy){
-	cpct_drawSolidBox(
-		cpct_getScreenPtr(CPCT_VMEM_START, enemy->x - x_offset, enemy->y - y_offset), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
-}	
+void chase_hero(u8* enemy){
+	u8* p = enemy;
+	if(hero.x < (*p)){
+		(*p)--; 
+	}else{
+		(*p)++;
+	}
+	p++;
+	if(hero.y < (*p)){
+		(*p) -= 2; 
+	}else{
+		(*p) += 2;
+	}
+}
+
+void increase_heal(u8* picked){
+	u8* p = picked;
+	(*p)++;
+	hero.lives++;
+}
+
+void drop_health(u8* enemy){
+	u8* p;
+	if(cpct_getRandom_lcg_u8(0) < 50){
+		for(u8 i = 0;i<MAX_OBJECTS_SCREEN;i++){
+			if(objects[i].picked == 1){
+				p = (u8*)&objects[i];
+				(*p) = (*enemy);
+				p++;
+				enemy++;
+				(*p) = (*enemy);
+				p++;
+				(*p)--;
+				break;
+			}
+		}
+	}
+}
 
 void update_enemies(){
-
+	u8* p;
+	check_collision_enemies_hero();
+	for(u8 i = 0;i<MAX_ENEMIES_SCREEN;++i){
+		if(enemies[i].lives > 0){
+				p = &enemies[i].ctpa;
+			if((*p) > 2){
+				enemies[i].perform_action((u8*)&enemies[i]);
+				(*p) = 0;
+			}else{
+				(*p)++;
+			}
+		}
+	}
 }
 
 void draw_enemies(){
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
-		if(enemies[i].lives != 0)
-			draw_enemies_aux(&enemies[i]);
+		if(enemies[i].lives != 0){
+			cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, enemies[i].x, enemies[i].y), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
+		}
 	}
 }
 
+void draw_objects(){
+	for(u8 i=0;i<MAX_OBJECTS_SCREEN;++i){
+		if(objects[i].picked == 0){
+			cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, objects[i].x, objects[i].y), 53, OBJECT_WIDTH, OBJECT_HEIGHT);
+		}
+	}
+}
 
 void init_hero(){
-	hero.x = 40;
-	hero.y = 30;
-	hero.lives = 5;
+	hero.x = 0;
+	hero.y = 0;
+	hero.lives = 1;
 }
 
 void update_hero(){
-	static u8 cycles_to_shot;
 	bool left = false, right = false;
 
 	cpct_scanKeyboard();
@@ -86,23 +158,15 @@ void update_hero(){
 		}
 	}
 
-	if(cycles_to_shot != 0x10){
-		cycles_to_shot++;
-	}
-
 	if(cpct_isKeyPressed(keys.shot)){
-		if(cycles_to_shot == 0x10){
-			cycles_to_shot = 0;
-			shot(0);
-		}
+		shot(0);	
 	}
+	check_collision_hero_objects();
 }
 
 void draw_hero(){
 	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, hero.x, hero.y), 130, HERO_WIDTH, HERO_HEIGHT);
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //	
@@ -112,11 +176,10 @@ void draw_hero(){
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void update_bullets_aux(TBullets* bullets_array, u8 size, u8* n_bullets){
+void update_bullets_aux(TBullet* bullets_array, u8 size, u8* n_bullets){
 	u8 i = size;
-	TBullets* bullets_pointer = bullets_array;
+	TBullet* bullets_pointer = bullets_array;
 	// Comprobamos si colisiona:
-	// Primero con enemigos-heroe, luego con paredes.
 	do {
 		if(bullets_pointer[i].x != 0xFF){
 			// 0: up, 1: down, 2: left, 3: right, 4:up-left, 5:up-right, 6:down-left, 7:down-right
@@ -248,12 +311,15 @@ bool check_collision_items(u8* first, u8 fheight, u8 fwidth, u8* second, u8 shei
 
 void check_collision_bullet_hero(){
 	u8* p;
-	for(u8 j=0;j<MAX_ENEMIES_SCREEN;++j){
-		if(enemies[j].lives != 0 && bullet_hero.x != 0xFF){
-			if(check_collision_items((u8*)&bullet_hero, BULLETS_HEIGHT, BULLETS_WIDTH, (u8*)&enemies[j], ENEMY_HEIGHT, ENEMY_WIDTH)){
+	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
+		if(enemies[i].lives != 0 && bullet_hero.x != 0xFF){
+			if(check_collision_items((u8*)&bullet_hero, BULLETS_HEIGHT, BULLETS_WIDTH, (u8*)&enemies[i], ENEMY_HEIGHT, ENEMY_WIDTH)){
 				//Le quitamos una vida al enemigo
-				p = &enemies[j].lives;
-				(*p)--;
+				p = &enemies[i].lives;
+				--(*p);
+				if((*p) == 0){
+					drop_health((u8*)&enemies[i]);
+				}
 				// Eliminamos la bala de la pantalla
 				p = (u8*)&bullet_hero;
 				(*p) = 0xFF;
@@ -268,12 +334,32 @@ void check_collision_bullet_hero(){
 void check_collision_bullets_enemies(){
 	u8* pbullet;
 	for(u8 i=0;i<MAX_BULLETS_ENEMY;++i){
-		if(bullets_enemies[i].x != 0xFF && check_collision_items((u8*)bullets_enemies[i], BULLETS_WIDTH, BULLETS_HEIGHT, (u8*)hero, HERO_WIDTH, HERO_HEIGHT)){
+		if(bullets_enemies[i].x != 0xFF && check_collision_items((u8*)&bullets_enemies[i], BULLETS_WIDTH, BULLETS_HEIGHT, (u8*)&hero, HERO_WIDTH, HERO_HEIGHT)){
 			pbullet = (u8*)&bullets_enemies[i];
 			(*pbullet) = 0xFF;
 			hero.lives--;
 		}
 	}
+}
+
+void check_collision_enemies_hero(){
+	u8* p;
+	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
+		if(enemies[i].lives > 0 && check_collision_items((u8*)&enemies[i], ENEMY_HEIGHT, ENEMY_WIDTH, (u8*)&hero, HERO_HEIGHT, HERO_WIDTH)){
+			p = &enemies[i].lives;
+			(*p) = 0;
+			hero.lives--;
+		}
+	}	
+}
+
+void check_collision_hero_objects(){
+	u8* pbullet;
+	for(u8 i=0;i<MAX_OBJECTS_SCREEN;++i){
+		if(objects[i].picked == 0 && check_collision_items((u8*)&objects[i], OBJECT_HEIGHT, OBJECT_WIDTH, (u8*)&hero, HERO_HEIGHT, HERO_WIDTH)){
+			objects[i].perform_action(&objects[i].picked);
+		}
+	}	
 }
 
 void update_bullets(){
@@ -322,12 +408,10 @@ void shot(u8 who){
 			fill_spot_bullet(&bullet_hero);		
 		}
 	}
-
 	
 }
 
-
-void fill_spot_bullet(TBullets* array_bullets){
+void fill_spot_bullet(TBullet* array_bullets){
 	
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
