@@ -1,5 +1,6 @@
 // Required Include files
 #include <cpctelera.h>
+#include "video/video.h"
 #include "constants.h"
 
 // Global variable pointing to the present memory used as back buffer
@@ -57,4 +58,17 @@ void video_initBuffers(){
     // This call will also set CRTC registers that will left video_buffer 
     // undisplayed and the other buffer displayed.
     video_switchBuffers();
+}
+
+bool video_isInsideViewport(u8 screen_x, u8 screen_y, u8 entity_x, u8 entity_y, u8 entity_width, u8 entity_height){
+
+    if (entity_x >= screen_x && entity_x + entity_width <= screen_x + VIEWPORT_WB){
+
+        if (entity_y >= screen_y && entity_y + entity_height <= screen_y + VIEWPORT_HP){
+
+            return true;
+        }
+    }
+
+    return false;
 }
