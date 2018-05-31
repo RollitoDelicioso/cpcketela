@@ -27,6 +27,8 @@ void erase_all();
 void update_all();
 void draw_all();
 
-extern u8 x_offset, y_offset;
+extern u16 offset;
+extern u8 scroll_x, scroll_y;
+extern u8 screen_x, screen_y;
 
 #endif

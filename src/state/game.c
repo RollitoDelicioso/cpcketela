@@ -24,7 +24,9 @@
 #include <tilemap/building.h>             // Automatically generated g_building tilemap declarations
 #include "maps/maps.h"
 
-u8 x_offset = 0, y_offset = 0;
+u16 offset = 0;  	// Offset in tiles of the start of the view window in the g_building tilemap
+u8 scroll_x = 0, scroll_y = 0;
+u8 screen_x = 0, screen_y = 0;
 
 void update_all(){
 	update_hero();
@@ -33,14 +35,25 @@ void update_all(){
 }
 
 void draw_all(){
+	// DRAW THE g_building TILEMAP SCROLLED
+	//    Scroll is controlled by offset, which is just representing the index of the first
+	// tile inside the g_building tilemap that has to be drawn.
+	u8* vmem = video_getBackBufferPtr() + VIEWPORT_OFFSET;
+
+	cpct_etm_drawTilemap4x8_ag(vmem, g_building + offset);
+
+	draw_enemies();
 	draw_hero();
 	draw_bullets();
-	draw_enemies();
 }
 
 void run_engine(){
+
 	update_all();
 	draw_all();
+
+	// After drawing the tilemap, switch video buffers to display recently drawn backbuffer
+	video_switchBuffers();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -88,39 +101,17 @@ void initialize() {
 
 void game(){
 
-	u16 offset = 0;  // Offset in tiles of the start of the view window in the g_building tilemap
-	u8 x = 0, y = 0;
-
 	init_hero();
 	initialize();
 
     map_load((u8*) &maps_000);
 
 	while (hero.lives != 0){
+
 		run_engine();
 		// Draw the viewport scrolled inside the g_building tilemap 
 		// up to the current movement offset
-		drawBuidlingScrolled(offset);
-
-
-		// Check user input and update offset accordingly (OPQA for movement)
-		// Use (x, y) coordinates of the upper-left tile of the viewport to determine 
-		// valid movements (those that maintain viewport inside g_building tilemap boundaries).
-		// Size of the viewport (VIEWPORT_W, VIEWPORT_H) is used to check boundaries.
-		// Offset value update:
-		//    - Right-Left movements select previous-next tile in the tilemap, so offset requires 
-		//      to be updated (-1 for left), (+1 for right).
-		//    - Up-Down movements want to select one tile up or one tile down. However, as the tilemap
-		//      is stored as a 2D-array, it means that one tile up or down is 1 row away in memory
-		//      (Each row is stored in memory after the previous row). Therefore, to select up-down
-		//      tiles in memory, offset requires to be updated (-g_building_W for up), (+g_building_W for down)
-		//
-
-		cpct_scanKeyboard_f();
-		if (cpct_isKeyPressed(Key_A) && x > 0)                         { --x; x_offset -= 8; --offset; }
-		if (cpct_isKeyPressed(Key_D) && x < g_building_W - VIEWPORT_W) { ++x; x_offset += 8; ++offset; }
-		if (cpct_isKeyPressed(Key_W) && y > 0)                         { --y; y_offset -= 8; offset -= g_building_W; }
-		if (cpct_isKeyPressed(Key_S) && y < g_building_H - VIEWPORT_H) { ++y; y_offset += 8; offset += g_building_W; }	
+		//drawBuidlingScrolled(offset);
 	}
 }
 
