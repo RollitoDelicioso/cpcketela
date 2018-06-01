@@ -145,7 +145,7 @@ void update_hero(){
 
 			//screen_y = (scroll_y * TILE_HP);
 		}
-		else if (hero.x - screen_x > 0){
+		else if (hero.x - screen_x > TILE_W){
 
 			hero.x -= 2;
 		}
@@ -164,7 +164,7 @@ void update_hero(){
 			screen_x = scroll_x * TILE_W;
 			//screen_y = (scroll_y * TILE_HP);
 		}
-		else if (hero.x - screen_x < (VIEWPORT_WB - HERO_WIDTH - 1)){
+		else if (hero.x - screen_x < (VIEWPORT_WB - HERO_WIDTH - TILE_W - 1)){
 
 			hero.x += 2;
 		}
@@ -183,7 +183,7 @@ void update_hero(){
 			hero.y -= 8;
 			screen_y = (scroll_y * TILE_HP);
 		}
-		else if (hero.y - screen_y > 0){
+		else if (hero.y - screen_y > TILE_HP){
 
 			hero.y -= 8;
 		}
@@ -203,7 +203,7 @@ void update_hero(){
 			hero.y += 8;
 			screen_y = (scroll_y * TILE_HP);
 		}
-		else if (hero.y - screen_y < (VIEWPORT_HP - HERO_HEIGHT)){
+		else if (hero.y - screen_y < (VIEWPORT_HP - HERO_HEIGHT - TILE_HP)){
 
 			hero.y += 8;
 		}
