@@ -15,6 +15,9 @@
 #define BULLETS_WIDTH 1
 #define BULLETS_HEIGHT 1
 
+#define BULLETS_SPEED_X 4
+#define BULLETS_SPEED_Y 8;
+
 #define OBJECT_WIDTH 4
 #define OBJECT_HEIGHT 16
 
@@ -24,6 +27,7 @@
 
 #define MAX_BULLETS_HERO 2
 #define MAX_BULLETS_ENEMY 3
+#define MAX_NUMBER_OBJECTIVE_BULLETS 3
 
 // Pointer to the second hardware screen
 #define HW_BACKBUFFER (u8*)(0x8000)

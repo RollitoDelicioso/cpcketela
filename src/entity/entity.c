@@ -9,13 +9,23 @@ void chase_hero(u8*);
 void increase_heal(u8*);
 void spawn_enemy(u8*);
 
+#define INIT_BULLET {0xFF, 0, 0}
+#define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
+
 THero hero;
-const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{60,100,chase_hero,0,1}, {30,50,chase_hero,0,1}, {40,120,spawn_enemy,0,1}, {70,50,chase_hero,0,1}};
+const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{60,100,0,shot_objective,0,1}, {30,50,0,chase_hero,0,1}, {40,120,0,spawn_enemy,0,1}, {70,50,0,chase_hero,0,1}};
 const TBullet bullet_hero = {0xFF,0,0};
-const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {{0xFF,0,0}, {0xFF,0,0}, {0xFF,0,0}};
+const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {INIT_BULLET, INIT_BULLET, INIT_BULLET};
+const TOBullet bullets_enemies_objective[MAX_BULLETS_ENEMY] = {INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET};
 const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,increase_heal}, {10,100,0,increase_heal}};
 const u8 n_hero_bullets_on_screen = 0;
-const u8 n_enemy_bullets_on_screen = 0;	
+const u8 n_enemy_bullets_on_screen = 0;
+const u8 n_enemy_objective_bullets_on_screen = 0;
+
+void shot_objective(u8* enemy){
+
+	shot(2, enemy);
+}
 
 void spawn_enemy(u8* enemy){
 	TEnemy *p,*p2;
@@ -32,7 +42,12 @@ void spawn_enemy(u8* enemy){
 	}
 }
 
-void chase_hero(u8* enemy){
+void chase_and_shot(u8* enemy){ //Demonio Loquillo
+	chase_hero(enemy);
+	shot(1, enemy);
+}
+
+void chase_hero(u8* enemy){ //Fantasmita
 	u8* p = enemy;
 	if(hero.x < (*p)){
 		(*p)--; 
@@ -214,7 +229,7 @@ void update_hero(){
 	}
 
 	if(cpct_isKeyPressed(keys.shot)){
-		shot(0);
+		shot(0, (u8*) &hero);
 	}
 	check_collision_hero_objects();
 }
@@ -346,6 +361,50 @@ void update_bullets_aux(TBullet* bullets_array, u8 size, u8* n_bullets){
     } while(i--);
 }
 
+void update_objective_bullets(){
+
+	TOBullet* obullet;
+
+	for (int i = 0; i < MAX_NUMBER_OBJECTIVE_BULLETS; i++){
+
+		obullet = &bullets_enemies_objective[i];
+
+		// If bullet is in use
+		if (obullet->x != null){
+
+			// Check the direction of the bullet: If increment is positive, start < end
+			if (obullet->increment > 0){
+
+				// If bullet has not reached the target
+				if (obullet->x < obullet->x_end){
+
+					obullet->x += obullet->increment;
+					obullet->y = obullet->y_end + obullet->m * obullet->x - obullet->m * obullet->x_end;
+				}
+				else {
+
+					obullet->x = null;
+				}
+			}
+			// If increment is not positive, start > end
+			else {
+
+				// If bullet has not reached the target
+				if (obullet->x > obullet->x_end){
+
+					obullet->x += obullet->increment;
+					obullet->y = obullet->y_end + obullet->m * obullet->x - obullet->m * obullet->x_end;
+				}
+				else {
+
+					obullet->x = null;
+				}
+
+			}
+		}
+	}
+}
+
 bool check_collision_items(u8* first, u8 fheight, u8 fwidth, u8* second, u8 sheight, u8 swidth){
 	
 	// first apunta a FirstEntity.x
@@ -432,6 +491,10 @@ void update_bullets(){
 		update_bullets_aux(&bullet_hero, MAX_BULLETS_HERO-1, n_bullets);
 		check_collision_bullet_hero();
 	}
+
+	update_objective_bullets();
+
+
 	/*n_bullets = (u8*)n_enemy_bullets_on_screen;
 	if((*n_bullets)){
 		check_collision_bullets_enemies();
@@ -445,6 +508,14 @@ void draw_bullets(){
 	if (bullet_hero.x != 0xFF){
 		cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x - screen_x, bullet_hero.y - screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);	
 	}
+
+	for (int i = 0; i < MAX_NUMBER_OBJECTIVE_BULLETS; i++){
+
+		if (bullets_enemies_objective[i].x != null){
+
+			cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullets_enemies_objective[i].x - screen_x, bullets_enemies_objective[i].y - screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);	
+		}
+	}
 	
 	/*u8 i = MAX_BULLETS_HERO-1;
 	do {
@@ -455,30 +526,71 @@ void draw_bullets(){
 
 }
 
-// who: 0 -> hero, who: 1 -> enemy
-void shot(u8 who){
+// who: 0 -> hero, who: 1 -> enemy, who: 2 -> enemy with objetive shot
+void shot(u8 who, u8* entity){
 	u8* n_bullets;
-	if(who){
+	if(who == 1){
 		u8 i = MAX_BULLETS_ENEMY-1;
 		do{
 			if(bullets_enemies[i].x == 0xFF){
 				n_bullets = (u8*)n_enemy_bullets_on_screen;
 				(*n_bullets)++;
-				fill_spot_bullet(&bullets_enemies[i]);
+				fill_spot_bullet(&bullets_enemies[i], entity);
 				break;
 			}
 		}while(i--);
-	}else{
+	}
+	else if (who == 0){
 		if(bullet_hero.x == 0xFF){
 			n_bullets = (u8*)n_hero_bullets_on_screen;
 			(*n_bullets)++;
-			fill_spot_bullet(&bullet_hero);		
+			fill_spot_bullet(&bullet_hero, entity);		
 		}
+	}
+	// Objective shot
+	else {
+
+		u8 i = MAX_NUMBER_OBJECTIVE_BULLETS - 1;
+
+		do {
+
+			if (bullets_enemies_objective[i].x == 0xFF){
+
+				n_bullets = (u8*)n_enemy_objective_bullets_on_screen;
+				(*n_bullets)++;
+				fill_spot_objective_bullet(&bullets_enemies_objective[i], (TEnemy*) entity);
+				break;
+			}
+		}
+		while (i--);
 	}
 	
 }
 
-void fill_spot_bullet(TBullet* array_bullets){
+void fill_spot_objective_bullet(TOBullet* obullet, TEnemy* enemy){
+
+	// Set start and end of the objective bullet
+	obullet->x = enemy->x;
+	obullet->y = enemy->y;
+	obullet->x_end = hero.x + HERO_WIDTH / 2;
+	obullet->y_end = hero.y + HERO_HEIGHT / 2;
+
+	// Check if start is lower than end. In that case, increment will be a positive integer
+	if (obullet->x < obullet->x_end){
+
+		obullet->increment = BULLETS_SPEED_X;
+	}
+	// Otherwise, it will be a negative integer
+	else {
+
+		obullet->increment = -BULLETS_SPEED_X;
+	}
+
+	// Calculate the slope
+	obullet->m = (obullet->y_end - obullet->y) / (obullet->x_end - obullet->x);
+}
+
+void fill_spot_bullet(TBullet* array_bullets, u8* shooter){
 	
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
@@ -494,11 +606,21 @@ void fill_spot_bullet(TBullet* array_bullets){
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//cpct_memcpy((void*)array_bullets, (void*)hero, (u16)5); 93t less bytes
-	
+	//0: hero,   1: enemy	
 	u8* raw_pointer_bullets = (u8*) array_bullets; 
-	(*raw_pointer_bullets) = hero.x;
-	raw_pointer_bullets += 1;
-	(*raw_pointer_bullets) = hero.y;
-	raw_pointer_bullets += 1;
-	(*raw_pointer_bullets) = hero.ldf; //72t more bytes
+
+	(*raw_pointer_bullets) = (*shooter);
+	
+	raw_pointer_bullets++;
+	shooter++;
+
+	(*raw_pointer_bullets) = (*shooter);
+	
+	raw_pointer_bullets++;
+	shooter++;
+
+	(*raw_pointer_bullets) = (*shooter); //72t more bytes
 }
+
+
+

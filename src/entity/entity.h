@@ -16,6 +16,7 @@ typedef struct {
 typedef struct {
 	u8 x;
 	u8 y;
+	u8 ldf;	
 	void (*perform_action)(u8*);
 	u8 ctpa; //count_to_perform_action
 	u8 lives;
@@ -27,6 +28,15 @@ typedef struct {
 	u8 dir; // Direction of the bullet
 		//0: right
 } TBullet;
+
+typedef struct {
+	u8 x;
+	u8 y;
+	u8 x_end;
+	u8 y_end;
+	i8 increment;
+	i16 m;		// Slope
+} TOBullet;
 
 typedef struct {
 	u8 x;
@@ -48,8 +58,9 @@ void draw_enemies();
 void check_collisions();
 void update_bullets();
 void draw_bullets();
-void shot(u8 who);
-void fill_spot_bullet(TBullet* array_bullets);
+void shot(u8 who, u8* entity);
+void fill_spot_objective_bullet(TOBullet* obullet, TEnemy* enemy);
+void fill_spot_bullet(TBullet* array_bullets, u8* entity);
 
 //Objects
 void draw_objects();
