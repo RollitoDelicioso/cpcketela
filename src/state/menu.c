@@ -16,29 +16,39 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
+#include <cpctelera.h>
 #include "menu.h"
+#include "video/video.h"
 
 void menu(){
 
+	video_resetScreenPtr();
 	draw_menu();
+
 	while (1){
 		cpct_scanKeyboard();
 		if(cpct_isKeyPressed(Key_1)){
 
-			cpct_clearScreen_f64(0);
+			//cpct_clearScreen_f64(0);
 			break;
 		
 		}else if(cpct_isKeyPressed(Key_2)){
 
-			reasign_buttons(); 
+			reasign_buttons();
+			//video_switchBuffers();
+
 			draw_menu();
+			//video_switchBuffers();
 		
 		}else if(cpct_isKeyPressed(Key_3)){
 
 			show_credits();
-			draw_menu();
+			//video_switchBuffers();
 
-			while(cpct_isAnyKeyPressed()){
+			draw_menu();
+			//video_switchBuffers();
+
+			while (cpct_isAnyKeyPressed()){
 				cpct_scanKeyboard();
 			};
 
@@ -47,67 +57,73 @@ void menu(){
 }
 
 void draw_menu(){
+
 	u8* pvmem;
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 20, 20);
-	cpct_drawStringM1("Welcome to CPCKetela!", pvmem, 1, 0);
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 15, 55);
-	cpct_drawStringM1("Press: ", pvmem, 1, 0);
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 20, 70);
-	cpct_drawStringM1("1: To play", pvmem, 1, 0);
+
+	cpct_clearScreen_f64(0);
+
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 0, 0);
+	cpct_drawStringM0("Welcome to CPCKetela", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 0, 55);
+	cpct_drawStringM0("Press: ", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 5, 70);
+	cpct_drawStringM0("1: To play", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	pvmem += 0x50 + 0x50;
-	cpct_drawStringM1("2: Reasign buttons", pvmem, 1, 0);
+	cpct_drawStringM0("2: Reasign buttons", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	pvmem += 0x50 + 0x50;
-	cpct_drawStringM1("3: Credits", pvmem, 1, 0);	
+	cpct_drawStringM0("3: Credits", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);	
 }
 
 void reasign_buttons(){
 
-	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 35, 100);;
+	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 35, 100);
 
 	cpct_clearScreen_f64(0);
+	//video_clearScreen();
 
-	cpct_drawStringM1("Up!", pvmem, 1, 0);
+	cpct_drawStringM0("Up!", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	waitReleaseKey(Key_2);
 	keys.up = waitAKey();
 	waitReleaseKey(keys.up);
 
-	cpct_drawStringM1("Down!", pvmem, 1, 0);
+	cpct_drawStringM0("Down!", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	keys.down = waitAKey(); 
 	waitReleaseKey(keys.down);
 
-	cpct_drawStringM1("Left!", pvmem, 1, 0);
+	cpct_drawStringM0("Left!", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	keys.left = waitAKey(); 
 	waitReleaseKey(keys.left);
 
-	cpct_drawStringM1("Right!", pvmem, 1, 0);
+	cpct_drawStringM0("Right!", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	keys.right = waitAKey(); 
 	waitReleaseKey(keys.right);
 	
-	cpct_drawStringM1("Shot! ", pvmem, 1, 0);
+	cpct_drawStringM0("Shot! ", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	keys.shot = waitAKey(); 
 	waitReleaseKey(keys.shot);
 	
-	cpct_drawStringM1("Menu!", pvmem, 1, 0);
+	cpct_drawStringM0("Menu!", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	keys.menu = waitAKey(); 
 	waitReleaseKey(keys.menu);
 
-	cpct_clearScreen_f64(0);
+	//cpct_clearScreen_f64(0);
 }
 
 void show_credits(){
 
-	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 60);
+	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 12, 60);
 	
 	cpct_clearScreen_f64(0);
+	//video_clearScreen();
 
-	cpct_drawStringM1("Robert Esclapez Garcia", pvmem, 1, 0);
+	cpct_drawStringM0("Robert Esclapez", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 38, 80);
-	cpct_drawStringM1("&", pvmem, 1, 0);
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 100);
-	cpct_drawStringM1("Jesus Perales Hernandez", pvmem, 1, 0);
+	cpct_drawStringM0("&", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 15, 100);
+	cpct_drawStringM0("Jesus Perales", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 
 	waitReleaseKey(Key_3);
 
 	waitAKey();
-	cpct_clearScreen_f64(0);
+	//cpct_clearScreen_f64(0);
 }

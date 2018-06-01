@@ -60,6 +60,12 @@ void video_initBuffers(){
     video_switchBuffers();
 }
 
+void video_resetScreenPtr(){
+
+    cpct_setVideoMemoryPage(cpct_pageC0);
+    video_buffer = HW_BACKBUFFER;
+}
+
 bool video_isInsideViewport(u8 screen_x, u8 screen_y, u8 entity_x, u8 entity_y, u8 entity_width, u8 entity_height){
 
     if (entity_x >= screen_x && entity_x + entity_width <= screen_x + VIEWPORT_WB){

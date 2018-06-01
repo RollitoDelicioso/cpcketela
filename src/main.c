@@ -46,9 +46,10 @@ void main(void){
     cpct_setStackLocation((void*) 0x8000);
     settings();
     initKeyboard();
+    //video_initBuffers();    // Initialize screen video buffers
 
     while (1){
-        menu();	
+        menu();
         game();
     }
 }

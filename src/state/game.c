@@ -66,11 +66,12 @@ void initialize() {
    // internal values will always be the same (same tileset, tilemap and viewport size), we 
    // set them only once here, and then we just call the drawing function each time we need it.
    cpct_etm_setDrawTilemap4x8_ag(VIEWPORT_W, VIEWPORT_H, g_building_W, g_tileset_00);
-   screen_y = scroll_y = screen_x = scroll_x = offset = 0;
+   //screen_y = scroll_y = screen_x = scroll_x = offset = 0;
 }
 
 void gameOver(){
-	cpct_clearScreen_f64(0);
+	//cpct_clearScreen_f64(0);
+	//video_clearScreen();
 }
 
 void game(){
@@ -82,6 +83,7 @@ void game(){
 	while (hero.lives > 0){
 		run_engine();
 	}
+	
 	gameOver();
 }
 

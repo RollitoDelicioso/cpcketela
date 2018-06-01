@@ -3,6 +3,9 @@
 #define bool u8
 #define null 0xFF
 
+#define MENU_FOREGROUND_COLOR 15
+#define MENU_BACKGROUND_COLOR 0
+
 #define HERO_WIDTH 4
 #define HERO_HEIGHT 16
 
