@@ -3,8 +3,16 @@
 #define bool u8
 #define null 0xFF
 
+
+// COLORS
 #define MENU_FOREGROUND_COLOR 15
 #define MENU_BACKGROUND_COLOR 0
+
+#define SCORE_FOREGROUND_COLOR 4
+#define SCORE_BACKGROUND_COLOR 0
+
+#define HEALTH_FOREGROUND_COLOR 4
+#define HEALTH_BACKGROUND_COLOR 0
 
 #define HERO_WIDTH 4
 #define HERO_HEIGHT 16
@@ -44,6 +52,16 @@
 #define VIEWPORT_HP		  144			// Height of the viewport in pixels
 #define VIEW_X            (0 * TILE_W)	// X location of the viewport in bytes
 #define VIEW_Y            (0 * TILE_H) 	// Y location of the viewport in bytes
+
+#define INIT_LETTERS_SCORE_POSITION (u16*)(0xD5F4)
+#define INIT_LETTERS_SCORE_POSITION_BACKBUFFER (u16*)(0x95F4)
+#define INIT_NUMBERS_SCORE_POSITION (u16*)(0xFE44)
+#define INIT_NUMBERS_SCORE_POSITION_BACKBUFFER (u16*)(0xBE44)
+
+#define INIT_LETTERS_HEALTH_POSITION (u16*)(0xD60B)
+#define INIT_LETTERS_HEALTH_POSITION_BACKBUFFER (u16*)(0x960B)
+#define INIT_NUMBERS_HEALTH_POSITION (u16*)(0xFE61)
+#define INIT_NUMBERS_HEALTH_POSITION_BACKBUFFER (u16*)(0xBE61)
 
 #define HERO_START_X_RELATIVE 40
 #define HERO_START_Y_RELATIVE 72

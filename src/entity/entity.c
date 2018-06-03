@@ -1,4 +1,5 @@
 #include "entity.h"
+#include <cpctelera.h>
 
 #include "state/game.h"
 #include "video/video.h"
@@ -8,22 +9,91 @@
 void chase_hero(u8*);
 void increase_heal(u8*);
 void spawn_enemy(u8*);
+void add_score(u8*);
+void shot_objective(u8*);
+
 
 #define INIT_BULLET {0xFF, 0, 0}
 #define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
 
 THero hero;
-const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{60,100,0,shot_objective,0,1}, {30,50,0,shot_objective,0,1}, {8,8,0,chase_hero,0,1}, {4,8,0,chase_hero,0,1}};
+const u8 s10k, s1k, s100, s10, s1;
+const u8 h100, h10, h1;
+const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{60,100,0,shot_objective,0,0}, {30,50,0,shot_objective,0,0}, {8,8,0,chase_hero,0,1}, {4,8,0,chase_hero,0,1}};
 const TBullet bullet_hero = {0xFF,0,0};
 const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {INIT_BULLET, INIT_BULLET, INIT_BULLET};
 const TOBullet bullets_enemies_objective[MAX_BULLETS_ENEMY] = {INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET};
-const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,increase_heal}, {10,100,0,increase_heal}};
+const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,add_score}, {10,100,0,increase_heal}};
 const u8 n_hero_bullets_on_screen = 0;
 const u8 n_enemy_bullets_on_screen = 0;
 const u8 n_enemy_objective_bullets_on_screen = 0;
 
-void shot_objective(u8* enemy){
+void calculate_new_score(){
+	u8* p = &s10k;
+	u16* hero_score = &hero.score;
 
+	(*p) = (*hero_score)/10000;
+	p++;
+	(*p) = ((*hero_score)%10000)/1000;
+	p++;
+	(*p) = ((*hero_score)%1000)/100;
+	p++;
+	(*p) = ((*hero_score)%100)/10;
+	p++;
+	(*p) = (*hero_score)%10;
+}
+
+void print_score_aux(u16* mem){
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s10k+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s1k+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s100+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s10+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s1+48);
+}
+
+void print_score(){
+	calculate_new_score();
+	print_score_aux(INIT_NUMBERS_SCORE_POSITION);
+	print_score_aux(INIT_NUMBERS_SCORE_POSITION_BACKBUFFER);
+}
+
+void calculate_new_health(){
+	u8* p = &h100;
+	i8* hero_lives = &hero.lives;
+
+	(*p) = (*hero_lives)/100;
+	p++;
+	(*p) = ((*hero_lives)%100)/10;
+	p++;
+	(*p) = (*hero_lives)%10;
+}
+
+void print_health_aux(u16* mem){
+	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h100+48); 
+	mem += 2;  
+	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h10+48); 
+	mem += 2;  
+	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h1+48); 
+}
+
+void print_health(){
+	calculate_new_health();
+	print_health_aux(INIT_NUMBERS_HEALTH_POSITION);
+	print_health_aux(INIT_NUMBERS_HEALTH_POSITION_BACKBUFFER);
+}
+
+void add_score(u8* picked){
+	u8* p = picked;
+	(*p)++;
+	hero.score += 100;
+	print_score();
+}
+
+void shot_objective(u8* enemy){
 	shot(2, enemy);
 }
 
@@ -134,6 +204,7 @@ void increase_heal(u8* picked){
 	u8* p = picked;
 	(*p)++;
 	hero.lives++;
+	print_health();
 }
 
 void drop_health(u8* enemy){
@@ -169,7 +240,7 @@ void update_enemies(){
 		}
 	}
 }
-
+	
 void draw_enemies(){
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
 		if(enemies[i].lives > 0){
@@ -544,6 +615,11 @@ void check_collision_bullet_hero(){
 				// Restamos uno al contador de balas del hero
 				p = (u8*)n_hero_bullets_on_screen;
 				(*p)--;
+
+				//Aumentamos el score en 10
+				hero.score += 10;
+				//Y lo actualizamos
+				print_score();
 			}
 		}
 	}

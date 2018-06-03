@@ -96,7 +96,3 @@ u16 pixel_to_tile(u8 x, u8 y){
 
     return resultado;
 }
-
-u8 tile_to_pixel(){
-
-}
