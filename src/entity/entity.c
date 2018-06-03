@@ -58,6 +58,7 @@ void chase_hero(u8* enemy){ //Fantasmita
 
 	// Erase tile
 	ptilemap[pixel_to_tile((*p), *(p + 1))] = 3;
+	ptilemap[pixel_to_tile((*p), *(p + 1) + ENEMY_SPEED_Y)] = 3;
 
 
 	// Check left
@@ -126,6 +127,7 @@ void chase_hero(u8* enemy){ //Fantasmita
 	}
 
 	ptilemap[pixel_to_tile(*(p - 1), (*p))] = 10;
+	ptilemap[pixel_to_tile(*(p - 1), (*p) + ENEMY_SPEED_Y)] = 10;
 }
 
 void increase_heal(u8* picked){
@@ -551,6 +553,7 @@ void check_collision_bullet_hero(){
 
 					// Erase tile
 					ptilemap[pixel_to_tile(enemies[i].x, enemies[i].y)] = 3;
+					ptilemap[pixel_to_tile(enemies[i].x, enemies[i].y + ENEMY_SPEED_Y)] = 3;
 
 					drop_health((u8*)&enemies[i]);
 				}
@@ -588,6 +591,7 @@ void check_collision_enemies_hero(){
 			hero.lives--;
 
 			ptilemap[pixel_to_tile(p->x, p->y)] = 3;
+			ptilemap[pixel_to_tile(p->x, p->y + ENEMY_SPEED_Y)] = 3;
 		}
 	}	
 }
