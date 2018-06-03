@@ -235,15 +235,11 @@ void update_hero(){
 
 				--scroll_x;
 				--offset;
-				hero.x -= HERO_SPEED_X;
 				screen_x = scroll_x * TILE_W;
 
 				//screen_y = (scroll_y * TILE_HP);
 			}
-			else if (hero.x - screen_x > TILE_W){
-
-				hero.x -= HERO_SPEED_X;
-			}
+			hero.x -= HERO_SPEED_X;
 		}
 
 		hero.ldf = 2;
@@ -265,15 +261,10 @@ void update_hero(){
 
 				++scroll_x;
 				++offset;
-				hero.x += HERO_SPEED_X;
 				screen_x = scroll_x * TILE_W;
 				//screen_y = (scroll_y * TILE_HP);
 			}
-			else if (hero.x - screen_x < (VIEWPORT_WB - HERO_WIDTH - TILE_W - 1)){
-
-				hero.x += HERO_SPEED_X;
-			}
-
+			hero.x += HERO_SPEED_X;
 		}
 
 		hero.ldf = 3;
@@ -293,14 +284,9 @@ void update_hero(){
 				--scroll_y;
 				offset -= g_building_W;
 				//screen_x = scroll_x * (TILE_WP / 2);
-				hero.y -= HERO_SPEED_Y;
 				screen_y = (scroll_y * TILE_HP);
 			}
-			else if (hero.y - screen_y > TILE_HP){
-
-				hero.y -= HERO_SPEED_Y;
-			}
-
+			hero.y -= HERO_SPEED_Y;
 		}
 
 		if (left)		{ hero.ldf = 4; }
@@ -321,14 +307,9 @@ void update_hero(){
 				++scroll_y;
 				offset += g_building_W;
 				//screen_x = scroll_x * (TILE_WP / 2);
-				hero.y += HERO_SPEED_Y;
 				screen_y = (scroll_y * TILE_HP);
 			}
-			else if (hero.y - screen_y < (VIEWPORT_HP - HERO_HEIGHT - TILE_HP)){
-
-				hero.y += HERO_SPEED_Y;
-			}
-
+			hero.y += HERO_SPEED_Y;
 		}
 
 		if (left)		{ hero.ldf = 6; }
