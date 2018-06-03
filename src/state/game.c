@@ -42,8 +42,8 @@ void draw_all(){
 
 	cpct_etm_drawTilemap4x8_ag(vmem, g_building + offset);
 
-	draw_enemies();
 	draw_objects();
+	draw_enemies();
 	draw_hero();
   	draw_bullets();
 }
