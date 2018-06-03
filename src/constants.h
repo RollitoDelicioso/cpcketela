@@ -48,6 +48,15 @@
 #define HERO_START_X_RELATIVE 40
 #define HERO_START_Y_RELATIVE 72
 
+#define HERO_SPEED_X 4
+#define HERO_SPEED_Y 8
+
+#define ENEMY_SPEED_X 4
+#define ENEMY_SPEED_Y 8
+
+#define NUMBER_OF_PIXELS_PER_BYTE 2
+#define PROVISIONAL_OBSTACLE_TILE_ID 29
+
 // Pre-calculate the offset in bytes at which the viewport has to be drawn. This place will
 // be the same in relative coordinates. For instance, standard video memory starts at 0xC000.
 // If this viewport was to be drawn at 0xC120, 0x120 would be the offset. This offset would

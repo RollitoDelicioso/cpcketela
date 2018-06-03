@@ -1,6 +1,7 @@
 // Required Include files
 #include <cpctelera.h>
 #include "video/video.h"
+#include "tilemap/building.h"
 #include "constants.h"
 
 // Global variable pointing to the present memory used as back buffer
@@ -77,4 +78,25 @@ bool video_isInsideViewport(u8 screen_x, u8 screen_y, u8 entity_x, u8 entity_y, 
     }
 
     return false;
+}
+
+u16 pixel_to_tile(u8 x, u8 y){
+
+    u16 resultado;
+
+    // Convert x from byte-position to pixel-position
+    x = x * NUMBER_OF_PIXELS_PER_BYTE;
+
+    // Convert from pixel-position to tile-position
+    x = x / TILE_WP;
+    y = y / TILE_HP;
+
+    // Return position in the tilemap array
+    resultado = y * g_building_W + x;
+
+    return resultado;
+}
+
+u8 tile_to_pixel(){
+
 }
