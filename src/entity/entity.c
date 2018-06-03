@@ -539,6 +539,8 @@ bool check_collision_items(u8* first, u8 fheight, u8 fwidth, u8* second, u8 shei
 
 void check_collision_bullet_hero(){
 	u8* p;
+	u8* ptilemap = (u8*) &g_building;
+
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
 		if(enemies[i].lives != 0 && bullet_hero.x != 0xFF){
 			if(check_collision_items((u8*)&bullet_hero, BULLETS_HEIGHT, BULLETS_WIDTH, (u8*)&enemies[i], ENEMY_HEIGHT, ENEMY_WIDTH)){
@@ -546,6 +548,10 @@ void check_collision_bullet_hero(){
 				p = &enemies[i].lives;
 				--(*p);
 				if((*p) == 0){
+
+					// Erase tile
+					ptilemap[pixel_to_tile(enemies[i].x, enemies[i].y)] = 3;
+
 					drop_health((u8*)&enemies[i]);
 				}
 				// Eliminamos la bala de la pantalla
