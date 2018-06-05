@@ -7,7 +7,7 @@
 extern u8* const maps[120];
 
 // Maps
-extern const u8 maps_000[11];
+extern const u8 maps_000[];
 
 // Maps will have the following structure:
 // [Number of tile] Background color
