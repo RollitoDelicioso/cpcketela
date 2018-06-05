@@ -20,8 +20,8 @@
 #define ENEMY_WIDTH 4
 #define ENEMY_HEIGHT 16
 
-#define BULLETS_WIDTH 1
-#define BULLETS_HEIGHT 1
+#define BULLETS_WIDTH 2
+#define BULLETS_HEIGHT 8
 
 #define BULLETS_SPEED_X 4
 #define BULLETS_SPEED_Y 8;
@@ -29,8 +29,8 @@
 #define OBJECT_WIDTH 4
 #define OBJECT_HEIGHT 16
 
-#define MAX_ENEMIES_SCREEN 4
-
+#define MAX_ENEMIES_SCREEN 30
+#define MAX_PORTALS_SCREEN 4
 #define MAX_OBJECTS_SCREEN 2
 
 #define MAX_BULLETS_HERO 2
@@ -53,6 +53,14 @@
 #define VIEW_X            (0 * TILE_W)	// X location of the viewport in bytes
 #define VIEW_Y            (0 * TILE_H) 	// Y location of the viewport in bytes
 
+#define START_TILE_SCROLL_X             11
+#define START_TILE_SCROLL_Y             9
+
+#define END_TILE_SCROLL_X   	        20
+#define END_TILE_SCROLL_Y	            21
+
+
+
 #define INIT_LETTERS_SCORE_POSITION (u16*)(0xD5F4)
 #define INIT_LETTERS_SCORE_POSITION_BACKBUFFER (u16*)(0x95F4)
 #define INIT_NUMBERS_SCORE_POSITION (u16*)(0xFE44)
@@ -73,7 +81,15 @@
 #define ENEMY_SPEED_Y 8
 
 #define NUMBER_OF_PIXELS_PER_BYTE 2
-#define PROVISIONAL_OBSTACLE_TILE_ID 29
+
+#define PROVISIONAL_FLOOR_TILE_ID maps_000[0]
+#define PROVISIONAL_OBSTACLE_TILE_ID maps_000[1]
+#define PROVISIONAL_ENEMY_OCUPIED_TILE_ID maps_000[2]
+#define PROVISIONAL_PORTAL_LOCAL 16
+#define PROVISIONAL_PORTAL_END 18
+
+// Needs 16 bytes 
+#define OBSTACLE_CREATE_RECTANGLE(X1,Y1,X2,Y2) X1,Y1,X2,Y1,X2,Y1,X2,Y2,X1,Y2,X2,Y2,X1,Y1,X1,Y2,
 
 // Pre-calculate the offset in bytes at which the viewport has to be drawn. This place will
 // be the same in relative coordinates. For instance, standard video memory starts at 0xC000.
