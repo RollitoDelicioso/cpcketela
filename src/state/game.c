@@ -20,6 +20,7 @@
 #include <types.h>
 #include "game.h"
 #include "video/video.h"
+#include "entity/entity.h"
 #include <tilemap/tileset.h>              // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>             // Automatically generated g_building tilemap declarations
 #include "maps/maps.h"
@@ -27,7 +28,6 @@
 u16 offset = 0;  	// Offset in tiles of the start of the view window in the g_building tilemap
 u8 scroll_x = 0, scroll_y = 0;
 u8 screen_x = 0, screen_y = 0;
-
 void update_all(){
 	update_hero();
 	update_bullets();
@@ -67,6 +67,13 @@ void initialize() {
    // set them only once here, and then we just call the drawing function each time we need it.
    cpct_etm_setDrawTilemap4x8_ag(VIEWPORT_W, VIEWPORT_H, g_building_W, g_tileset_00);
    //screen_y = scroll_y = screen_x = scroll_x = offset = 0;
+	cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
+	cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION_BACKBUFFER, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
+	print_score();
+
+	cpct_drawStringM0("HEALTH", INIT_LETTERS_HEALTH_POSITION, HEALTH_FOREGROUND_COLOR, HEALTH_BACKGROUND_COLOR);
+	cpct_drawStringM0("HEALTH", INIT_LETTERS_HEALTH_POSITION_BACKBUFFER, HEALTH_FOREGROUND_COLOR, HEALTH_BACKGROUND_COLOR);
+	print_health();
 }
 
 void gameOver(){

@@ -1,43 +1,164 @@
 #include "entity.h"
-
 #include "state/game.h"
 #include "video/video.h"
+#include "maps/maps.h"
+
+#include <cpctelera.h>
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
 
-void chase_hero(u8*);
-void increase_heal(u8*);
-void spawn_enemy(u8*);
-
 #define INIT_BULLET {0xFF, 0, 0}
 #define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
+#define INIT_PORTAL {0xFF,0,0,0}
+#define INIT_ENEMY {0,0,0,chase_hero,0,0,2}
+#define MAX_NUMBER_OF_UPDATED_ENEMYS 10
+#define START_ITERATION 0
+#define END_ITERATION 30
+
 
 THero hero;
-const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{60,100,0,shot_objective,0,1}, {30,50,0,shot_objective,0,1}, {8,8,0,chase_hero,0,1}, {4,8,0,chase_hero,0,1}};
+const u8 s10k, s1k, s100, s10, s1;
+const u8 h100, h10, h1;
+const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{4,8,0,chase_hero,15,1}, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY};
 const TBullet bullet_hero = {0xFF,0,0};
 const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {INIT_BULLET, INIT_BULLET, INIT_BULLET};
 const TOBullet bullets_enemies_objective[MAX_BULLETS_ENEMY] = {INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET};
-const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,increase_heal}, {10,100,0,increase_heal}};
+const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,add_score}, {10,100,0,increase_heal}};
+const TPortal portals[MAX_PORTALS_SCREEN] = {INIT_PORTAL,INIT_PORTAL,INIT_PORTAL,INIT_PORTAL};
+const TPortalNextMap;
 const u8 n_hero_bullets_on_screen = 0;
 const u8 n_enemy_bullets_on_screen = 0;
 const u8 n_enemy_objective_bullets_on_screen = 0;
+u8 current_iteration = 0;
+
+void calculate_new_score(){
+	u8* p = &s10k;
+	u16* hero_score = &hero.score;
+
+	(*p) = (*hero_score)/10000;
+	p++;
+	(*p) = ((*hero_score)%10000)/1000;
+	p++;
+	(*p) = ((*hero_score)%1000)/100;
+	p++;
+	(*p) = ((*hero_score)%100)/10;
+	p++;
+	(*p) = (*hero_score)%10;
+}
+
+void print_score_aux(u16* mem){
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s10k+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s1k+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s100+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s10+48);
+	mem += 2;  
+	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s1+48);
+}
+
+void print_score(){
+	calculate_new_score();
+	print_score_aux(INIT_NUMBERS_SCORE_POSITION);
+	print_score_aux(INIT_NUMBERS_SCORE_POSITION_BACKBUFFER);
+}
+
+void calculate_new_health(){
+	u8* p = &h100;
+	i8* hero_lives = &hero.lives;
+
+	(*p) = (*hero_lives)/100;
+	p++;
+	(*p) = ((*hero_lives)%100)/10;
+	p++;
+	(*p) = (*hero_lives)%10;
+}
+
+void print_health_aux(u16* mem){
+	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h100+48); 
+	mem += 2;  
+	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h10+48); 
+	mem += 2;  
+	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h1+48); 
+}
+
+void print_health(){
+	calculate_new_health();
+	print_health_aux(INIT_NUMBERS_HEALTH_POSITION);
+	print_health_aux(INIT_NUMBERS_HEALTH_POSITION_BACKBUFFER);
+}
+
+void add_score(u8* picked){
+	u8* p = picked;
+	(*p)++;
+	hero.score += 100;
+	print_score();
+}
 
 void shot_objective(u8* enemy){
-
 	shot(2, enemy);
 }
 
+void fill_enemy(TEnemy* p, u8 x, u8 y){
+	p->x = x;
+	p->y = y;
+	p->lives++;
+	p->perform_action = chase_hero;
+	p->stpa = 0;
+}
+
 void spawn_enemy(u8* enemy){
-	TEnemy *p,*p2;
+	u8 tile_x,tile1_y,tile2_y;
+	u8 enemy_x = (*enemy), enemy_y = (*(enemy+1));
+	u8* ptilemap = (u8*) &g_building;
+	
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
 		if(enemies[i].lives == 0){			
-			p = &enemies[i];
-			p2 = (TEnemy*)enemy;
 			
-			p->x = p2->x;
-			p->y = p2->y;
-			p->lives++;
-			p->perform_action = chase_hero;
+			//DERECHA
+			tile_x = enemy_x+ENEMY_WIDTH;
+			tile1_y = enemy_y;
+			tile2_y = enemy_y+ENEMY_HEIGHT/2;
+
+			if (ptilemap[pixel_to_tile(tile_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID
+			&& ptilemap[pixel_to_tile(tile_x, tile2_y)] == PROVISIONAL_FLOOR_TILE_ID){
+				fill_enemy(&enemies[i], tile_x, tile1_y);
+				return;
+			}
+
+			//ARRIBA
+			tile_x -= ENEMY_WIDTH;
+			tile1_y -= ENEMY_HEIGHT;
+			tile2_y -= ENEMY_HEIGHT;
+
+			if (ptilemap[pixel_to_tile(tile_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID
+			&& ptilemap[pixel_to_tile(tile_x, tile2_y)] == PROVISIONAL_FLOOR_TILE_ID){
+				fill_enemy(&enemies[i], tile_x, tile1_y);
+				return;
+			}
+
+			//IZQUIERDA
+			tile_x = enemy_x-ENEMY_WIDTH;
+			tile1_y = enemy_y;
+			tile2_y = enemy_y+ENEMY_HEIGHT/2;
+
+			if (ptilemap[pixel_to_tile(tile_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID
+			&& ptilemap[pixel_to_tile(tile_x, tile2_y)] == PROVISIONAL_FLOOR_TILE_ID){
+				fill_enemy(&enemies[i], tile_x, tile1_y);
+				return;
+			}
+
+			//ABAJO
+			tile_x = enemy_x;
+			tile1_y = enemy_y+ENEMY_HEIGHT;
+			tile2_y = enemy_y+ENEMY_HEIGHT+ENEMY_HEIGHT/2;
+
+			if (ptilemap[pixel_to_tile(tile_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID
+			&& ptilemap[pixel_to_tile(tile_x, tile2_y)] == PROVISIONAL_FLOOR_TILE_ID){
+				fill_enemy(&enemies[i], tile_x, tile1_y);
+				return;
+			}
 		}
 	}
 }
@@ -57,8 +178,8 @@ void chase_hero(u8* enemy){ //Fantasmita
 	u8 tile2_y = 0;
 
 	// Erase tile
-	ptilemap[pixel_to_tile((*p), *(p + 1))] = 3;
-	ptilemap[pixel_to_tile((*p), *(p + 1) + ENEMY_SPEED_Y)] = 3;
+	ptilemap[pixel_to_tile((*p), *(p + 1))] = PROVISIONAL_FLOOR_TILE_ID;
+	ptilemap[pixel_to_tile((*p), *(p + 1) + ENEMY_SPEED_Y)] = PROVISIONAL_FLOOR_TILE_ID;
 
 
 	// Check left
@@ -70,10 +191,8 @@ void chase_hero(u8* enemy){ //Fantasmita
 		tile2_x = (*p) - ENEMY_SPEED_X;
 		tile2_y = *(p + 1) + ENEMY_SPEED_Y;
 
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID
-			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID
-			&& ptilemap[pixel_to_tile(tile1_x, tile1_y)] != 10
-			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != 10){
+		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID
+			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] == PROVISIONAL_FLOOR_TILE_ID){
 
 			(*p) -= ENEMY_SPEED_X;
 		}
@@ -88,10 +207,8 @@ void chase_hero(u8* enemy){ //Fantasmita
 		tile2_y = *(p + 1) + ENEMY_SPEED_Y;
 
 		// Look up the tilemap to check if there is an obstacle in our next location
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID
-			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID
-			&& ptilemap[pixel_to_tile(tile1_x, tile1_y)] != 10
-			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != 10){
+		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID
+			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] == PROVISIONAL_FLOOR_TILE_ID){
 			
 			(*p) += ENEMY_SPEED_X;
 		}
@@ -106,8 +223,7 @@ void chase_hero(u8* enemy){ //Fantasmita
 		tile1_y = (*p) - ENEMY_SPEED_Y;
 
 		// Look up the tilemap to check if there is an obstacle in our next location
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID
-			&& ptilemap[pixel_to_tile(tile1_x, tile1_y)] != 10){
+		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID){
 			
 			(*p) -= ENEMY_SPEED_Y;
 		}
@@ -119,29 +235,32 @@ void chase_hero(u8* enemy){ //Fantasmita
 		tile1_y = (*p) + ENEMY_HEIGHT;
 
 		// Look up the tilemap to check if there is an obstacle in our next location
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID
-			&& ptilemap[pixel_to_tile(tile1_x, tile1_y)] != 10){
+		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] == PROVISIONAL_FLOOR_TILE_ID){
 
 			(*p) += ENEMY_SPEED_Y;
 		}
 	}
 
-	ptilemap[pixel_to_tile(*(p - 1), (*p))] = 10;
-	ptilemap[pixel_to_tile(*(p - 1), (*p) + ENEMY_SPEED_Y)] = 10;
+	ptilemap[pixel_to_tile(*(p - 1), (*p))] = PROVISIONAL_ENEMY_OCUPIED_TILE_ID;
+	ptilemap[pixel_to_tile(*(p - 1), (*p) + ENEMY_SPEED_Y)] = PROVISIONAL_ENEMY_OCUPIED_TILE_ID;
 }
 
 void increase_heal(u8* picked){
 	u8* p = picked;
 	(*p)++;
 	hero.lives++;
+	print_health();
 }
 
 void drop_health(u8* enemy){
 	u8* p;
+	TObject* pe;
 	if(cpct_getRandom_lcg_u8(0) < 50){
 		for(u8 i = 0;i<MAX_OBJECTS_SCREEN;i++){
 			if(objects[i].picked == 1){
 				p = (u8*)&objects[i];
+				pe = (TObject*)&objects[i];
+				pe->perform_action = increase_heal;
 				(*p) = (*enemy);
 				p++;
 				enemy++;
@@ -156,11 +275,18 @@ void drop_health(u8* enemy){
 
 void update_enemies(){
 	u8* p;
+	u8* p2;
 	check_collision_enemies_hero();
-	for(u8 i = 0;i<MAX_ENEMIES_SCREEN;++i){
+
+	if(current_iteration == 30){
+		current_iteration = 0;
+	}
+
+	for(u8 i = current_iteration; i < current_iteration+MAX_NUMBER_OF_UPDATED_ENEMYS; ++i){
 		if(enemies[i].lives > 0){
 				p = &enemies[i].ctpa;
-			if((*p) > 2){
+				p2 = &enemies[i].stpa;
+			if((*p) >= (*p2)){
 				enemies[i].perform_action((u8*)&enemies[i]);
 				(*p) = 0;
 			}else{
@@ -168,8 +294,11 @@ void update_enemies(){
 			}
 		}
 	}
-}
 
+	current_iteration += MAX_NUMBER_OF_UPDATED_ENEMYS;
+
+}
+	
 void draw_enemies(){
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
 		if(enemies[i].lives > 0){
@@ -196,13 +325,57 @@ void init_hero(){
 	hero.lives = 1;
 }
 
+void perform_teletransportation(){
+	u8 hero_x_tiles = hero.x/TILE_W, hero_y_tiles = hero.y/TILE_HP;
+	u8 tile_x, tile_y;
+	TPortal* p;
+
+	for(u8 i = 0;i < MAX_PORTALS_SCREEN;++i){
+		if(portals[i].x == hero_x_tiles && portals[i].y == hero_y_tiles){
+			p = &portals[i];
+			break;
+		}
+	}
+
+	tile_x = p->x_to;
+	tile_y = p->y_to;
+	hero.x = p->x_to*4;
+	hero.y = p->y_to*8;
+
+	if(tile_x < START_TILE_SCROLL_X){
+		scroll_x = 0;
+	}else if(tile_x >= START_TILE_SCROLL_X && tile_x <= END_TILE_SCROLL_X){
+		scroll_x = tile_x - START_TILE_SCROLL_X;
+	}else{
+		scroll_x = 12;
+	}
+
+
+	if(tile_y < START_TILE_SCROLL_Y){
+		scroll_y = 0;
+	}else if(tile_y >= START_TILE_SCROLL_Y && tile_y <= END_TILE_SCROLL_Y){
+		scroll_y = tile_y - START_TILE_SCROLL_Y;
+	}else{
+		scroll_y = 14;
+	}	
+	screen_x = scroll_x * TILE_W;
+	screen_y = scroll_y * TILE_HP;
+	offset = scroll_y*g_building_W + scroll_x;
+}
+
 void update_hero(){
 	bool left = false, right = false;
 	u8 tile1_x = 0;
 	u8 tile1_y = 0;
 	u8 tile2_x = 0;
 	u8 tile2_y = 0;
+	u8 aux;
 	u8* ptilemap = (u8*) &g_building;
+
+	if(hero.teletransportation != 0){
+		hero.teletransportation=0;
+		perform_teletransportation();
+	}
 
 	cpct_scanKeyboard_f();
 
@@ -228,8 +401,19 @@ void update_hero(){
 		tile2_x = hero.x - HERO_SPEED_X;
 		tile2_y = hero.y + HERO_SPEED_Y;
 
+		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
+
+		
+		if(aux == PROVISIONAL_PORTAL_END){
+			//next_map();
+		}else 
 		// Look up the tilemap to check if there is a wall in our next location
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID && ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
+		if 	(aux != PROVISIONAL_OBSTACLE_TILE_ID  
+			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
+
+			if(aux == PROVISIONAL_PORTAL_LOCAL){
+				hero.teletransportation = 1;
+			}
 
 			if (scroll_x > 0 && hero.x - screen_x <= HERO_START_X_RELATIVE){
 
@@ -237,13 +421,13 @@ void update_hero(){
 				--offset;
 				screen_x = scroll_x * TILE_W;
 
-				//screen_y = (scroll_y * TILE_HP);
 			}
 			hero.x -= HERO_SPEED_X;
 		}
 
 		hero.ldf = 2;
 		left = true;
+		if(hero.teletransportation) return;
 	}
 
 	if (cpct_isKeyPressed(keys.right)){
@@ -254,21 +438,31 @@ void update_hero(){
 		tile2_x = hero.x + HERO_SPEED_X;
 		tile2_y = hero.y + HERO_SPEED_Y;
 
+		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
+		
+		if(aux == PROVISIONAL_PORTAL_END){
+
+		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID && ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
+		if (aux != PROVISIONAL_OBSTACLE_TILE_ID 
+			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
+
+			if(aux == PROVISIONAL_PORTAL_LOCAL){
+				hero.teletransportation = 1;
+			}
 
 			if (hero.x - screen_x >= HERO_START_X_RELATIVE && scroll_x < g_building_W - VIEWPORT_W){
 
 				++scroll_x;
 				++offset;
 				screen_x = scroll_x * TILE_W;
-				//screen_y = (scroll_y * TILE_HP);
 			}
 			hero.x += HERO_SPEED_X;
 		}
 
 		hero.ldf = 3;
 		right = true;
+		if(hero.teletransportation) return;
 	}
 
 	if (cpct_isKeyPressed(keys.up)){
@@ -276,14 +470,22 @@ void update_hero(){
 		tile1_x = hero.x;
 		tile1_y = hero.y - HERO_SPEED_Y;
 
+		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
+
+		if(aux == PROVISIONAL_PORTAL_END){
+
+		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
+		if (aux != PROVISIONAL_OBSTACLE_TILE_ID){
+
+			if(aux == PROVISIONAL_PORTAL_LOCAL){
+				hero.teletransportation = 1;
+			}
 
 			if (scroll_y > 0 && hero.y - screen_y <= HERO_START_Y_RELATIVE){
 
 				--scroll_y;
 				offset -= g_building_W;
-				//screen_x = scroll_x * (TILE_WP / 2);
 				screen_y = (scroll_y * TILE_HP);
 			}
 			hero.y -= HERO_SPEED_Y;
@@ -299,14 +501,22 @@ void update_hero(){
 		tile1_x = hero.x;
 		tile1_y = hero.y + HERO_HEIGHT;
 
+		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
+
+		if(aux == PROVISIONAL_PORTAL_END){
+
+		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
-		if (ptilemap[pixel_to_tile(tile1_x, tile1_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
+		if (aux != PROVISIONAL_OBSTACLE_TILE_ID){
+
+			if(ptilemap[pixel_to_tile(tile1_x, tile1_y-HERO_HEIGHT/2)] == PROVISIONAL_PORTAL_LOCAL){
+				hero.teletransportation = 1;
+			}
 
 			if (hero.y - screen_y >= HERO_START_Y_RELATIVE && scroll_y < g_building_H - VIEWPORT_H){
 
 				++scroll_y;
 				offset += g_building_W;
-				//screen_x = scroll_x * (TILE_WP / 2);
 				screen_y = (scroll_y * TILE_HP);
 			}
 			hero.y += HERO_SPEED_Y;
@@ -533,8 +743,8 @@ void check_collision_bullet_hero(){
 				if((*p) == 0){
 
 					// Erase tile
-					ptilemap[pixel_to_tile(enemies[i].x, enemies[i].y)] = 3;
-					ptilemap[pixel_to_tile(enemies[i].x, enemies[i].y + ENEMY_SPEED_Y)] = 3;
+					ptilemap[pixel_to_tile(enemies[i].x, enemies[i].y)] = PROVISIONAL_FLOOR_TILE_ID;
+					ptilemap[pixel_to_tile(enemies[i].x, enemies[i].y + ENEMY_SPEED_Y)] = PROVISIONAL_FLOOR_TILE_ID;
 
 					drop_health((u8*)&enemies[i]);
 				}
@@ -544,6 +754,11 @@ void check_collision_bullet_hero(){
 				// Restamos uno al contador de balas del hero
 				p = (u8*)n_hero_bullets_on_screen;
 				(*p)--;
+
+				//Aumentamos el score en 10
+				hero.score += 10;
+				//Y lo actualizamos
+				print_score();
 			}
 		}
 	}
@@ -569,10 +784,12 @@ void check_collision_enemies_hero(){
 			p = &enemies[i];
 			
 			p->lives = 0;
-			hero.lives--;
+			ptilemap[pixel_to_tile(p->x, p->y)] = PROVISIONAL_FLOOR_TILE_ID;
+			ptilemap[pixel_to_tile(p->x, p->y + ENEMY_SPEED_Y)] = PROVISIONAL_FLOOR_TILE_ID;
 
-			ptilemap[pixel_to_tile(p->x, p->y)] = 3;
-			ptilemap[pixel_to_tile(p->x, p->y + ENEMY_SPEED_Y)] = 3;
+
+			hero.lives--;		
+			print_health();
 		}
 	}	
 }
@@ -601,6 +818,15 @@ void update_bullets(){
 		check_collision_bullets_enemies();
 		update_bullets_aux(bullets_enemies, MAX_BULLETS_ENEMY-1, n_bullets);
 	}*/
+}
+
+void draw_portals(){
+	//16
+	//21
+	for(u8 i=0;i<MAX_PORTALS_SCREEN;++i){
+
+	}
+
 }
 
 void draw_bullets(){
