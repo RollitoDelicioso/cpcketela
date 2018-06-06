@@ -973,7 +973,7 @@ void check_collision_bullets_enemies(){
 		if(bullets_enemies[i].x != 0xFF && check_collision_items((u8*)&bullets_enemies[i], BULLETS_WIDTH, BULLETS_HEIGHT, (u8*)&hero, HERO_WIDTH, HERO_HEIGHT)){
 			pbullet = (u8*)&bullets_enemies[i];
 			(*pbullet) = 0xFF;
-			hero.lives--;
+			//hero.lives--;
 			print_health();
 		}
 	}
@@ -981,7 +981,7 @@ void check_collision_bullets_enemies(){
         if(bullets_enemies_objective[i].x != 0xFF && check_collision_items((u8*)&bullets_enemies_objective[i], BULLETS_WIDTH, BULLETS_HEIGHT, (u8*)&hero, HERO_WIDTH, HERO_HEIGHT)){
             pbullet = (u8*)&bullets_enemies_objective[i];
             (*pbullet) = 0xFF;
-            hero.lives--;
+            //hero.lives--;
 			print_health();	
         }
     }
@@ -1000,7 +1000,7 @@ void check_collision_enemies_hero(){
 			ptilemap[pixel_to_tile(p->x, p->y + ENEMY_SPEED_Y)] = PROVISIONAL_FLOOR_TILE_ID;
 
 
-			hero.lives--;		
+			//hero.lives--;		
 			print_health();
 		}
 	}	
