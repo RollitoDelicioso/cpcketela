@@ -336,7 +336,7 @@ const u8 maps_005[26+(4*22)+(4*4)+(4*4)+(3*13)+(3*7)] = {
 
 };
 
-const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*4)] = {
+const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*21)+(3*5)] = {
 	22, //Suelo
 	11, // Muros
 	27, // Suelo falso
@@ -361,7 +361,7 @@ const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*4)] = {
 
 	24, 14, //Portal Final
 
-	10, // Número de enemies
+	21, // Número de enemies
 	ENEMY_CREATE(17,2,1)
 	ENEMY_CREATE(26,4,1)
 	ENEMY_CREATE(29,15,1)
@@ -388,7 +388,7 @@ const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*4)] = {
 
 	ENEMY_CREATE(13,4,1)
 
-	4, // Number of golds
+	5, // Number of golds
 	11,15,2,
 	13,15,2,
 	12,14,1,
