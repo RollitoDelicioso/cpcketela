@@ -155,4 +155,8 @@ void map_load(u8* map){
 		enemy_aux_pointer->stpa = 10;
 		indice += 2;
 	}
+
+	// Paint score and health
+	print_score();
+	print_health();
 }

@@ -70,6 +70,10 @@ void calculate_new_score(){
 }
 
 void print_score_aux(u16* mem){
+
+	cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
+	cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION_BACKBUFFER, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
+
 	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s10k+48);
 	mem += 2;  
 	cpct_drawCharM0(mem,SCORE_FOREGROUND_COLOR,SCORE_BACKGROUND_COLOR,s1k+48);
@@ -99,6 +103,10 @@ void calculate_new_health(){
 }
 
 void print_health_aux(u16* mem){
+
+	cpct_drawStringM0("HEALTH", INIT_LETTERS_HEALTH_POSITION, HEALTH_FOREGROUND_COLOR, HEALTH_BACKGROUND_COLOR);
+	cpct_drawStringM0("HEALTH", INIT_LETTERS_HEALTH_POSITION_BACKBUFFER, HEALTH_FOREGROUND_COLOR, HEALTH_BACKGROUND_COLOR);
+
 	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h100+48); 
 	mem += 2;  
 	cpct_drawCharM0(mem,HEALTH_FOREGROUND_COLOR,HEALTH_BACKGROUND_COLOR,h10+48); 
@@ -355,7 +363,29 @@ void init_hero(){
 
 void next_level(){
 	u8** p = &current_map;
+	u8* pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 16, 85);
+	u8 s10 = ((current_index + 2) / 10) + 48;
+	u8 s1 = ((current_index + 2) % 10) + 48;
 	(*p) = p_to_maps[++current_index];
+
+	cpct_memset(video_getBackBufferPtr(), 0, 16000);
+	//cpct_drawSolidBox(video_getBackBufferPtr(), 0, VIEWPORT_WB, VIEWPORT_HP);
+	cpct_drawStringM0("Next level: ", pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR);
+
+	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 62, 85);
+	cpct_drawCharM0(pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR, s10);
+
+	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 67, 85);
+	cpct_drawCharM0(pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR, s1);
+
+	video_switchBuffers();
+
+	//cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
+	for (u16 i = 0; i < 800; i++){
+
+		cpct_waitVSYNC();
+	}
+
 	map_load((u8*)current_map);
 }
 
