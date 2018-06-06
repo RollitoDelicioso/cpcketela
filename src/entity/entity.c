@@ -15,6 +15,12 @@
 #include <sprites/crab_frontal.h>
 #include <sprites/crab_izquierda.h>
 #include <sprites/crab_superior_izquierda.h>
+#include <sprites/wizard_frontal.h>
+#include <sprites/wizard_trasera.h>
+#include <sprites/wizard_izquierda.h>
+#include <sprites/wizard_derecha.h>
+#include <sprites/wizard_superior_izquierda.h>
+#include <sprites/wizard_superior_derecha.h>
 
 #define INIT_BULLET {0xFF, 0, 0}
 #define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
@@ -203,9 +209,25 @@ void spawn_enemy(u8* enemy){
 	}
 }
 
-void chase_and_shot(u8* enemy){ //Demonio Loquillo
+void chase_and_shot(u8* enemy){ //Wizard Loquillo
+	
+	TEnemy* ptr_enemy = (TEnemy*) enemy;
 	chase_hero(enemy);
+
+	if (ptr_enemy->ldf == 0)		{ ptr_enemy->sprite = (u8*) &g_wizard_trasera; }				// Up
+	else if (ptr_enemy->ldf == 1)	{ ptr_enemy->sprite = (u8*) &g_wizard_frontal; }				// Down
+	else if (ptr_enemy->ldf == 2)	{ ptr_enemy->sprite = (u8*) &g_wizard_izquierda; }				// Left
+	else if (ptr_enemy->ldf == 3)	{ ptr_enemy->sprite = (u8*) &g_wizard_derecha; }				// Right
+	else if (ptr_enemy->ldf == 4)	{ ptr_enemy->sprite = (u8*) &g_wizard_superior_izquierda; }		// Up-left
+	else if (ptr_enemy->ldf == 5)	{ ptr_enemy->sprite = (u8*) &g_wizard_superior_derecha; }		// Up-right
+	else if (ptr_enemy->ldf == 6)	{ ptr_enemy->sprite = (u8*) &g_wizard_frontal; }				// Down-left
+	else if (ptr_enemy->ldf == 7)	{ ptr_enemy->sprite = (u8*) &g_wizard_frontal; }				// Down-right
+	
 	shot(1, enemy);
+}
+
+void just_objective_shot(u8* enemy){ // Demon loquillo
+
 }
 
 void chase_hero(u8* enemy){ //Fantasmita
