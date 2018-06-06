@@ -8,7 +8,8 @@ extern u8* const maps[120];
 
 // Maps
 extern const u8 maps_000[];
-
+extern const u8 maps_001[];
+extern u8* const p_to_maps[];
 // Maps will have the following structure:
 // [Number of tile] Background color
 // [Number of tile], [Number of ranges] (X, Y) (X, Y) | Start - End | Range of 2 sets that represents lines of obstacles to be drawn

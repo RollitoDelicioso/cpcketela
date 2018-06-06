@@ -30,6 +30,29 @@ const u8 n_hero_bullets_on_screen = 0;
 const u8 n_enemy_bullets_on_screen = 0;
 const u8 n_enemy_objective_bullets_on_screen = 0;
 u8 current_iteration = 0;
+const u8* current_map;
+u8 current_index = 0;
+
+const u8 bullet_table_x[8] = {
+	HERO_WIDTH/2 - BULLETS_WIDTH/2, 	//up
+	HERO_WIDTH/2 - BULLETS_WIDTH/2, 	//down
+	BULLETS_WIDTH, //left
+	0, 	//right
+	BULLETS_WIDTH, //up-left
+	0,		//up-right
+	BULLETS_WIDTH,	//down-left
+	0		//up-right
+};
+const u8 bullet_table_y[8] = {
+	0,	//up
+	HERO_HEIGHT/2,		//down
+	HERO_HEIGHT/2 - BULLETS_HEIGHT/2,		//left
+	HERO_HEIGHT/2 - BULLETS_HEIGHT/2,		//right
+	0,	//up-left
+	0, 	//up-right
+	HERO_HEIGHT/2,		//down-left
+	HERO_HEIGHT/2 		//down-right
+};
 
 void calculate_new_score(){
 	u8* p = &s10k;
@@ -114,7 +137,7 @@ void spawn_enemy(u8* enemy){
 	u8* ptilemap = (u8*) &g_building;
 	
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
-		if(enemies[i].lives == 0){			
+		if(enemies[i].lives == 0){
 			
 			//DERECHA
 			tile_x = enemy_x+ENEMY_WIDTH;
@@ -320,9 +343,20 @@ void draw_objects(){
 }
 
 void init_hero(){
+	u8** p = &current_map;
+
+	(*p) = p_to_maps[0];
+	current_index = 0;
+
 	hero.x = HERO_START_X_RELATIVE;
 	hero.y = HERO_START_Y_RELATIVE;
 	hero.lives = 1;
+}
+
+void next_level(){
+	u8** p = &current_map;
+	(*p) = p_to_maps[++current_index];
+	map_load((u8*)current_map);
 }
 
 void perform_teletransportation(){
@@ -405,7 +439,7 @@ void update_hero(){
 
 		
 		if(aux == PROVISIONAL_PORTAL_END){
-			//next_map();
+			next_level();
 		}else 
 		// Look up the tilemap to check if there is a wall in our next location
 		if 	(aux != PROVISIONAL_OBSTACLE_TILE_ID  
@@ -441,7 +475,7 @@ void update_hero(){
 		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
 		
 		if(aux == PROVISIONAL_PORTAL_END){
-
+			next_level();
 		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
 		if (aux != PROVISIONAL_OBSTACLE_TILE_ID 
@@ -473,7 +507,7 @@ void update_hero(){
 		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
 
 		if(aux == PROVISIONAL_PORTAL_END){
-
+			next_level();
 		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
 		if (aux != PROVISIONAL_OBSTACLE_TILE_ID){
@@ -504,7 +538,7 @@ void update_hero(){
 		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
 
 		if(aux == PROVISIONAL_PORTAL_END){
-
+			next_level();
 		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
 		if (aux != PROVISIONAL_OBSTACLE_TILE_ID){
@@ -919,6 +953,7 @@ void fill_spot_objective_bullet(TOBullet* obullet, TEnemy* enemy){
 
 void fill_spot_bullet(TBullet* array_bullets, u8* shooter){
 	
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	// Firstly tranform the input array to *u8 (All data members are u8) so we can increase the value manualy 
@@ -933,15 +968,19 @@ void fill_spot_bullet(TBullet* array_bullets, u8* shooter){
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//cpct_memcpy((void*)array_bullets, (void*)hero, (u16)5); 93t less bytes
-	//0: hero,   1: enemy	
-	u8* raw_pointer_bullets = (u8*) array_bullets; 
+	//0: hero,   1: enemy
 
-	(*raw_pointer_bullets) = (*shooter);
+	u8* raw_pointer_bullets = (u8*) array_bullets;
+
+	u8 	increment_x = bullet_table_x[*(shooter+2)],
+		increment_y = bullet_table_y[*(shooter+2)];
+
+	(*raw_pointer_bullets) = (*shooter) + increment_x;
 	
 	raw_pointer_bullets++;
 	shooter++;
 
-	(*raw_pointer_bullets) = (*shooter);
+	(*raw_pointer_bullets) = (*shooter) + increment_y;
 	
 	raw_pointer_bullets++;
 	shooter++;

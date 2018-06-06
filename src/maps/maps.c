@@ -5,13 +5,18 @@
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
 
+//const u8 index;
+
+u8* const p_to_maps[2] = {maps_000, maps_001};
+
 // Maps
-const u8 maps_000[8+(4*14)+(4*4)+(0*5)] = {
+const u8 maps_000[24+(4*14)+(4*4)+(2*5)] = {
 	0, //Suelo
 	1, // Muros
 	14, // Suelo falso
 	
-	14, // Número de obstaculos
+	18, // Número de obstaculos
+	OBSTACLE_CREATE_RECTANGLE(0,0,31,31)
 	1, 13, 28, 13,
 	9, 8, 9, 28,
 	12, 22, 30, 22,
@@ -28,7 +33,7 @@ const u8 maps_000[8+(4*14)+(4*4)+(0*5)] = {
 	15,3,15,6,
 	27,14,27,19,
 	2,9,8,9,
-	
+
 	4, // Número de portales
 	3, 19, 28, 1, // Portal1 hacia portal2 índice 0
 	28, 1, 10, 12, // Portal2 hacia portal1 índice 1
@@ -36,14 +41,44 @@ const u8 maps_000[8+(4*14)+(4*4)+(0*5)] = {
 	27, 30, 3, 19,
 
 	30, 1, //Portal Final
-	0
-	/*5, // Número de generadores
+	
+	5, // Número de generadores
 	4,8,
 	20*4,28*8,
 	8*4,19*8,
 	10*4,14*8,
-	20*4,6*8*/
+	20*4,6*8
 };
+const u8 maps_001[24+(4*10)+(4*2)+(2*1)] = {
+	0, //Suelo
+	4, // Muros
+	14, // Suelo falso
+	
+	14, // Número de obstaculos
+	OBSTACLE_CREATE_RECTANGLE(0,0,31,31)
+	1, 13, 28, 13,
+	9, 8, 9, 28,
+	12, 22, 30, 22,
+	19, 6, 19, 10,
+	21, 25, 21, 30,
+	
+	5, 5, 30, 5,
+	13,27,28,27,
+	21,16,21,21,
+	12,9,28,9,
+	3,18,18,18,
+
+	2, // Número de portales
+	3, 19, 28, 1, // Portal1 hacia portal2 índice 0
+	28, 1, 10, 12, // Portal2 hacia portal1 índice 1
+	30, 1, //Portal Final
+	1, // Número de generadores
+	4,8,
+};
+
+
+
+
 
 void reset_enemies(){
 	TEnemy* p;

@@ -106,5 +106,5 @@ extern const u8 n_hero_bullets_on_screen;
 extern const u8 n_hero_enemy_on_screen;
 extern const u8 s10k, s1k, s100, s10, s1;
 extern const u8 h100, h10, h1;
-
+extern const u8* current_map;
 #endif
