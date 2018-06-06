@@ -22,10 +22,9 @@
 #include "keyboard/keyboard.h"
 #include "video/video.h"
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
-#include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
 #include <music/FrisBot.h>
-
 u8 number_of_interruptions = 0;
+#include <tilemap/map1.h>           // Automatically generated g_building tilemap declarations
 
 void InterruptServiceRoutine(){
 

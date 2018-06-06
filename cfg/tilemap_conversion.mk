@@ -33,7 +33,7 @@
 
 ## CONVERT: img/building.tmx to src/maps/building.c & src/maps/building.h
 ##	Generates a g_building C-Array, with 1-byte tile indexes defining the building
-$(eval $(call TMX2C,img/building.tmx,g_building,src/tilemap/,))
+$(eval $(call TMX2C,img/map1.tmx,g_building,src/tilemap/,))
 
 ## CONVERT: img/frame_updown.tmx to src/maps/frame_updown.c & src/maps/frame_updown.h
 ##	Generates a g_frame_ud C-Array, with 1-byte tile indexes defining Upper and Lower parts of the frame

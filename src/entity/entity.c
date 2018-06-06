@@ -5,7 +5,6 @@
 
 #include <cpctelera.h>
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
-#include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
 #include <sprites/hero_frontal.h>
 #include <sprites/hero_trasera.h>
 #include <sprites/hero_lateral_izquierda.h>
@@ -32,20 +31,18 @@
 #include <sprites/demon_inferior_derecha.h>
 #include <sprites/heart.h>
 #include <sprites/coin.h>
+#include <tilemap/map1.h>           // Automatically generated g_building tilemap declarations
 
 #define INIT_BULLET {0xFF, 0, 0}
 #define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
 #define INIT_PORTAL {0xFF,0,0,0}
 #define INIT_ENEMY {0,0,0,chase_hero,0,0,2, (u8*) &g_crab_izquierda}
-#define MAX_NUMBER_OF_UPDATED_ENEMYS 10
-#define START_ITERATION 0
-#define END_ITERATION 30
-
+#define ENEMIES_10 INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY
 
 THero hero;
 const u8 s10k, s1k, s100, s10, s1;
 const u8 h100, h10, h1;
-const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{4,8,0,chase_hero,15,1, 2, (u8*) &g_crab_izquierda}, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY};
+const TEnemy enemies[MAX_ENEMIES_SCREEN] = {ENEMIES_10,ENEMIES_10,ENEMIES_10,ENEMIES_10};
 const TBullet bullet_hero = {0xFF,0,0};
 const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {INIT_BULLET, INIT_BULLET, INIT_BULLET};
 const TOBullet bullets_enemies_objective[MAX_BULLETS_ENEMY] = {INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET};
@@ -408,7 +405,7 @@ void update_enemies(){
 	u8* p2;
 	check_collision_enemies_hero();
 
-	if(current_iteration == 30){
+	if(current_iteration == END_ITERATION){
 		current_iteration = 0;
 	}
 
@@ -461,6 +458,13 @@ void init_hero(){
 	hero.y = HERO_START_Y_RELATIVE;
 	hero.lives = 1;
 	hero.sprite = (u8*) &g_hero_frontal;
+
+	scroll_x = 0;
+	scroll_y = 0;
+
+	screen_x = 0;
+	screen_y = 0;
+	offset = 0;
 }
 
 void next_level(){
@@ -537,7 +541,7 @@ void update_hero(){
 	u8 tile2_y = 0;
 	u8 aux;
 	u8* ptilemap = (u8*) &g_building;
-
+	u8 next_levl_f = 0;
 	if(hero.teletransportation != 0){
 		hero.teletransportation=0;
 		perform_teletransportation();
@@ -569,10 +573,6 @@ void update_hero(){
 
 		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
 
-		
-		if(aux == PROVISIONAL_PORTAL_END){
-			next_level();
-		}else 
 		// Look up the tilemap to check if there is a wall in our next location
 		if 	(aux != PROVISIONAL_OBSTACLE_TILE_ID  
 			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
@@ -595,6 +595,10 @@ void update_hero(){
 		hero.sprite = (u8*) &g_hero_lateral_izquierda;
 		left = true;
 		if(hero.teletransportation) return;
+		if(aux == PROVISIONAL_PORTAL_END){
+			next_level();
+			return;
+		}
 	}
 
 	if (cpct_isKeyPressed(keys.right)){
@@ -607,9 +611,6 @@ void update_hero(){
 
 		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
 		
-		if(aux == PROVISIONAL_PORTAL_END){
-			next_level();
-		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
 		if (aux != PROVISIONAL_OBSTACLE_TILE_ID 
 			&& ptilemap[pixel_to_tile(tile2_x, tile2_y)] != PROVISIONAL_OBSTACLE_TILE_ID){
@@ -631,6 +632,10 @@ void update_hero(){
 		hero.sprite = (u8*) &g_hero_lateral_derecha;
 		right = true;
 		if(hero.teletransportation) return;
+		if(aux == PROVISIONAL_PORTAL_END){
+			next_level();
+			return;
+		}
 	}
 
 	if (cpct_isKeyPressed(keys.up)){
@@ -640,9 +645,6 @@ void update_hero(){
 
 		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
 
-		if(aux == PROVISIONAL_PORTAL_END){
-			next_level();
-		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
 		if (aux != PROVISIONAL_OBSTACLE_TILE_ID){
 
@@ -662,6 +664,10 @@ void update_hero(){
 		if (left)		{ hero.ldf = 4; hero.sprite = (u8*) &g_hero_superior_izquierda; }
 		else if (right)	{ hero.ldf = 5; hero.sprite = (u8*) &g_hero_superior_derecha; }
 		else 			{ hero.ldf = 0; hero.sprite = (u8*) &g_hero_trasera; }
+		if(aux == PROVISIONAL_PORTAL_END){
+			next_level();
+			return;
+		}
 	}
 
 	if (cpct_isKeyPressed(keys.down)){
@@ -671,9 +677,6 @@ void update_hero(){
 
 		aux = ptilemap[pixel_to_tile(tile1_x, tile1_y)];
 
-		if(aux == PROVISIONAL_PORTAL_END){
-			next_level();
-		}else
 		// Look up the tilemap to check if there is an obstacle in our next location
 		if (aux != PROVISIONAL_OBSTACLE_TILE_ID){
 
@@ -693,6 +696,10 @@ void update_hero(){
 		if (left)		{ hero.ldf = 6; hero.sprite = (u8*) &g_hero_frontal; }
 		else if (right)	{ hero.ldf = 7; hero.sprite = (u8*) &g_hero_frontal; }
 		else 			{ hero.ldf = 1; hero.sprite = (u8*) &g_hero_frontal; }
+		if(ptilemap[pixel_to_tile(tile1_x, tile1_y-HERO_HEIGHT/2)] == PROVISIONAL_PORTAL_END){
+			next_level();
+			return;
+		}
 	}
 
 	if(cpct_isKeyPressed(keys.shot)){

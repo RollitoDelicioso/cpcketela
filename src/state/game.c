@@ -22,7 +22,7 @@
 #include "video/video.h"
 #include "entity/entity.h"
 #include <tilemap/tileset.h>              // Automatically generated tileset arrays declarations
-#include <tilemap/building.h>             // Automatically generated g_building tilemap declarations
+#include <tilemap/map1.h>             // Automatically generated g_building tilemap declarations
 #include "maps/maps.h"
 
 u16 offset = 0;  	// Offset in tiles of the start of the view window in the g_building tilemap
@@ -91,13 +91,13 @@ void gameOver(){
 
 	video_switchBuffers();
 
-	//cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
-	/*for (u16 i = 0; i < 800; i++){
 
-		cpct_waitVSYNC();
-	}*/
-	while (cpct_isAnyKeyPressed_f() == 0){
+	while (cpct_isAnyKeyPressed_f()){
+		cpct_scanKeyboard();
+	}
 
+
+	while (!cpct_isAnyKeyPressed_f()){
 		cpct_scanKeyboard();
 	}
 }
@@ -106,7 +106,7 @@ void game(){
 
 	init_hero();
 	initialize();
-	map_load((u8*) &maps_000);
+	map_load((u8*) &maps_001);
 
 	while (hero.lives > 0){
 		run_engine();
