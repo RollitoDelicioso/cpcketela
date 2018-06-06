@@ -1001,6 +1001,7 @@ void draw_bullets(){
 		cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x - screen_x, bullet_hero.y - screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);	
 	}
 
+	// Objective bullets
 	for (int i = 0; i < MAX_NUMBER_OBJECTIVE_BULLETS; i++){
 
 		if (bullets_enemies_objective[i].x != null){

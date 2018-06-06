@@ -23,9 +23,19 @@
 #include "video/video.h"
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
+#include <music/FrisBot.h>
+
+u8 number_of_interruptions = 0;
 
 void InterruptServiceRoutine(){
-	cpct_scanKeyboard_if();
+
+	//cpct_scanKeyboard_if();
+
+    if (++number_of_interruptions == 6){
+
+        cpct_akp_musicPlay();
+        number_of_interruptions = 0;
+    }
 }
 
 void settings(){
@@ -35,6 +45,7 @@ void settings(){
 	cpct_setVideoMode(0);
     cpct_setPalette(g_palette, 16);  // Set our own colours defined en g_palette (automatically generated in maps/tileset.c)
     cpct_setBorder(HW_BLUE);         // Set border same as background colour: BLUE
+    cpct_akp_musicInit(song_ingame);
 }
 
 void main(void){
