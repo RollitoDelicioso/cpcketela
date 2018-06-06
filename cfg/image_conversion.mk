@@ -92,6 +92,9 @@ $(eval $(call IMG2SPRITES,img/heart.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 ## Objects sprites - Coin
 $(eval $(call IMG2SPRITES,img/coin.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 
+## Shot sprite - Shot
+$(eval $(call IMG2SPRITES,img/bola_fuego.png,0,g,6,12,$(PALETTE),mask,src/sprites,))
+
 #$(eval $(call IMG2SPRITES,img/hero_superior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 #$(eval $(call IMG2SPRITES,img/hero_superior_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 

@@ -28,6 +28,7 @@
 u16 offset = 0;  	// Offset in tiles of the start of the view window in the g_building tilemap
 u8 scroll_x = 0, scroll_y = 0;
 u8 screen_x = 0, screen_y = 0;
+u8 initialized = 0;
 void update_all(){
 	update_hero();
 	update_bullets();
@@ -69,11 +70,45 @@ void initialize() {
    //screen_y = scroll_y = screen_x = scroll_x = offset = 0;
 	//cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
 	//cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION_BACKBUFFER, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
-	print_score();
+	
+    cpct_drawSolidBox(CPCT_VMEM_START, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, 64, 0), 240, 16, 200);
+	cpct_drawSolidBox(HW_BACKBUFFER, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(HW_BACKBUFFER, 64, 0), 240, 16, 200);
 
 	//cpct_drawStringM0("HEALTH", INIT_LETTERS_HEALTH_POSITION, HEALTH_FOREGROUND_COLOR, HEALTH_BACKGROUND_COLOR);
 	//cpct_drawStringM0("HEALTH", INIT_LETTERS_HEALTH_POSITION_BACKBUFFER, HEALTH_FOREGROUND_COLOR, HEALTH_BACKGROUND_COLOR);
-	print_health();
+}
+
+
+void youWin(){
+	//cpct_clearScreen_f64(0);
+	//video_clearScreen();
+	u8* pvmem = 0;
+
+	cpct_drawSolidBox(CPCT_VMEM_START, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, 64, 0), 240, 16, 200);
+	cpct_drawSolidBox(HW_BACKBUFFER, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(HW_BACKBUFFER, 64, 0), 240, 16, 200);
+
+
+	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 20, 85);
+	cpct_drawStringM0("YOU   WIN", pvmem, GAME_OVER_FOREGROUND_COLOR, GAME_OVER_BACKGROUND_COLOR);
+
+	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 13, 105);
+	cpct_drawStringM0("Press any key", pvmem, GAME_OVER_FOREGROUND_COLOR, GAME_OVER_BACKGROUND_COLOR);
+
+	video_switchBuffers();
+
+
+	while (cpct_isAnyKeyPressed_f()){
+		cpct_scanKeyboard();
+	}
+
+
+	while (!cpct_isAnyKeyPressed_f()){
+		cpct_scanKeyboard();
+	}
 }
 
 void gameOver(){
@@ -81,7 +116,11 @@ void gameOver(){
 	//video_clearScreen();
 	u8* pvmem = 0;
 
-	cpct_memset(video_getBackBufferPtr(), 1, 16000);
+	cpct_drawSolidBox(CPCT_VMEM_START, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, 64, 0), 240, 16, 200);
+	cpct_drawSolidBox(HW_BACKBUFFER, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(HW_BACKBUFFER, 64, 0), 240, 16, 200);
+
 
 	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 20, 85);
 	cpct_drawStringM0("Game Over", pvmem, GAME_OVER_FOREGROUND_COLOR, GAME_OVER_BACKGROUND_COLOR);
@@ -102,16 +141,30 @@ void gameOver(){
 	}
 }
 
+void preload(){
+	map_load((u8*) &maps_001);
+	print_score();
+	print_health();
+}
+
 void game(){
 
 	init_hero();
-	initialize();
-	map_load((u8*) &maps_001);
+	if(initialized == 0){
+		initialize();
+		initialized = 1;
+	}
 
-	while (hero.lives > 0){
+	preload();
+
+	while (hero.lives > 0 && hero.won != 1){
 		run_engine();
 	}
-	
-	gameOver();
+
+	if(hero.won == 1){
+		youWin();
+	}else{		
+		gameOver();
+	}
 }
 

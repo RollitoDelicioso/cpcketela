@@ -5,20 +5,20 @@
 
 
 // COLORS
-#define MENU_FOREGROUND_COLOR 15
-#define MENU_BACKGROUND_COLOR 1
+#define MENU_FOREGROUND_COLOR 14
+#define MENU_BACKGROUND_COLOR 5
 
 #define NEXT_LEVEL_FOREGROUND_COLOR 15
-#define NEXT_LEVEL_BACKGROUND_COLOR 1
+#define NEXT_LEVEL_BACKGROUND_COLOR 5
 
 #define GAME_OVER_FOREGROUND_COLOR 15
-#define GAME_OVER_BACKGROUND_COLOR 1
+#define GAME_OVER_BACKGROUND_COLOR 5
 
 #define SCORE_FOREGROUND_COLOR 4
-#define SCORE_BACKGROUND_COLOR 1
+#define SCORE_BACKGROUND_COLOR 5
 
 #define HEALTH_FOREGROUND_COLOR 4
-#define HEALTH_BACKGROUND_COLOR 1
+#define HEALTH_BACKGROUND_COLOR 5
 
 #define HERO_WIDTH 4
 #define HERO_HEIGHT 16
@@ -26,8 +26,8 @@
 #define ENEMY_WIDTH 4
 #define ENEMY_HEIGHT 16
 
-#define BULLETS_WIDTH 2
-#define BULLETS_HEIGHT 8
+#define BULLETS_WIDTH 3
+#define BULLETS_HEIGHT 12
 
 #define BULLETS_SPEED_X 4
 #define BULLETS_SPEED_Y 8;
@@ -104,7 +104,7 @@
 #define OBSTACLE_CREATE_LINE(X1,Y1,X2,Y2) X1,Y1,X2,Y2,
 #define OBSTACLE_CREATE_DIAGONAL_LINE(X1,Y1,X2,Y2) X1,Y1,X2,Y2,
 
-#define GENERATOR_CREATE(X1,Y1) X1,Y1,
+#define ENEMY_CREATE(X1,Y1,TYPE) X1,Y1,TYPE,
 
 // Pre-calculate the offset in bytes at which the viewport has to be drawn. This place will
 // be the same in relative coordinates. For instance, standard video memory starts at 0xC000.

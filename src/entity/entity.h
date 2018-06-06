@@ -14,6 +14,7 @@ typedef struct {
 	u16 score;
 	u8 teletransportation;
 	const u8* sprite;
+	u8 won;
 } THero;
 
 typedef struct {
@@ -81,6 +82,7 @@ void shot_objective(u8*);
 void increase_heal(u8*);
 void spawn_enemy(u8*);
 void add_score(u8*);
+void chase_and_shot(u8* enemy);
 
 
 //Bullets
@@ -105,6 +107,7 @@ extern const TEnemy enemies[];
 extern const TBullet bullet_hero;
 extern const TBullet bullets_enemies[];
 extern const TPortal portals[];
+extern const TObject objects[];
 extern const u8 n_hero_bullets_on_screen;
 extern const u8 n_hero_enemy_on_screen;
 extern const u8 s10k, s1k, s100, s10, s1;

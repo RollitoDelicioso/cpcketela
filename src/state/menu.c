@@ -28,8 +28,6 @@ void menu(){
 	while (1){
 		cpct_scanKeyboard();
 		if(cpct_isKeyPressed(Key_1)){
-
-			//cpct_clearScreen_f64(0);
 			break;
 		
 		}else if(cpct_isKeyPressed(Key_2)){
@@ -60,25 +58,35 @@ void draw_menu(){
 
 	u8* pvmem;
 
-	cpct_clearScreen_f64(0);
+	cpct_drawSolidBox(CPCT_VMEM_START, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, 64, 0), 240, 16, 200);
+	cpct_drawSolidBox(HW_BACKBUFFER, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(HW_BACKBUFFER, 64, 0), 240, 16, 200);
+	
 
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 0, 0);
-	cpct_drawStringM0("Welcome to CPCKetela", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 0, 55);
+
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 20);
+	cpct_drawStringM0("Welcome to", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 20, 35);
+	cpct_drawStringM0("CPCKetela", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);	
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 5, 75);
 	cpct_drawStringM0("Press: ", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
-	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 5, 70);
-	cpct_drawStringM0("1: To play", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
+	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 5, 100);
+	cpct_drawStringM0("1:To play", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	pvmem += 0x50 + 0x50;
-	cpct_drawStringM0("2: Reasign buttons", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
+	cpct_drawStringM0("2:Reasign buttons", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	pvmem += 0x50 + 0x50;
-	cpct_drawStringM0("3: Credits", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);	
+	cpct_drawStringM0("3:Credits", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);	
 }
 
 void reasign_buttons(){
 
 	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 35, 100);
 
-	cpct_clearScreen_f64(0);
+	cpct_drawSolidBox(CPCT_VMEM_START, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, 64, 0), 240, 16, 200);
+	cpct_drawSolidBox(HW_BACKBUFFER, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(HW_BACKBUFFER, 64, 0), 240, 16, 200);
 	//video_clearScreen();
 
 	cpct_drawStringM0("Up!", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
@@ -113,7 +121,10 @@ void show_credits(){
 
 	u8* pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 12, 60);
 	
-	cpct_clearScreen_f64(0);
+	cpct_drawSolidBox(CPCT_VMEM_START, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, 64, 0), 240, 16, 200);
+	cpct_drawSolidBox(HW_BACKBUFFER, 240, 64, 200);
+	cpct_drawSolidBox(cpct_getScreenPtr(HW_BACKBUFFER, 64, 0), 240, 16, 200);
 	//video_clearScreen();
 
 	cpct_drawStringM0("Robert Esclapez", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);

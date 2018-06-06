@@ -5,14 +5,18 @@
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <sprites/monster_portal.h>
 #include <tilemap/map1.h>           // Automatically generated g_building tilemap declarations
+#include <sprites/crab_frontal.h>
+#include <sprites/wizard_frontal.h>
+#include <sprites/demon_frontal.h>
+#include <sprites/heart.h>
+#include <sprites/coin.h>
 
 
-//const u8 index;
 
 u8* const p_to_maps[6] = {maps_001, maps_002, maps_003, maps_004, maps_005, maps_006};
 
 // Maps
-const u8 maps_001[25+(4*18)+(4*4)+(4*2)+(2*9)] = {
+const u8 maps_001[26+(4*18)+(4*4)+(4*2)+(3*9)+(3*2)] = {
 	0, //Suelo
 	14, // Muros
 	1, // Suelo falso
@@ -56,63 +60,23 @@ const u8 maps_001[25+(4*18)+(4*4)+(4*2)+(2*9)] = {
 	1, 3, //Portal Final
 	
 	9, // Número de generadores
-	GENERATOR_CREATE(4,10)
-	GENERATOR_CREATE(5,18)
-	GENERATOR_CREATE(13,7)
-	GENERATOR_CREATE(16,13)
-	GENERATOR_CREATE(15,20)
+	ENEMY_CREATE(4,10,3)
+	ENEMY_CREATE(5,18,1)
+	ENEMY_CREATE(13,7,1)
+	ENEMY_CREATE(16,13,1)
+	ENEMY_CREATE(15,20,1)
 	
-	GENERATOR_CREATE(20,28)
-	GENERATOR_CREATE(22,4)
-	GENERATOR_CREATE(22,18)
-	GENERATOR_CREATE(28,10)
+	ENEMY_CREATE(20,28,1)
+	ENEMY_CREATE(22,4,1)
+	ENEMY_CREATE(22,18,1)
+	ENEMY_CREATE(28,10,1)
+
+	2, // Number of golds
+	2,14,2,
+	12,14,1,
 };
 
-/*
-const u8 maps_000[25+(4*14)+(4*4)+(2*5)] = {
-	0, //Suelo
-	14, // Muros
-	1, // Suelo falso
-	
-	18, // Número de obstaculos no diagonales
-	OBSTACLE_CREATE_RECTANGLE(0,0,31,31)
-	1, 13, 28, 13,
-	9, 8, 9, 28,
-	12, 22, 30, 22,
-	19, 6, 19, 10,
-	21, 25, 21, 30,
-	
-	5, 5, 30, 5,
-	13,27,28,27,
-	21,16,21,21,
-	12,9,28,9,
-	3,18,18,18,
-	
-	5,16,5,28,
-	15,3,15,6,
-	27,14,27,19,
-	2,9,8,9,
-
-	0, // Número de obstaculos diagonales
-
-	4, // Número de portales
-	3, 19, 28, 1, // Portal1 hacia portal2 índice 0
-	28, 1, 10, 12, // Portal2 hacia portal1 índice 1
-	10, 12, 27, 30,
-	27, 30, 3, 19,
-
-	30, 1, //Portal Final
-	
-	5, // Número de generadores
-	4,8,
-	20,28,
-	8,19,
-	10,14,
-	20,6
-};
-*/
-
-const u8 maps_002[25+(4*13)+(4*9)+(4*4)+(2*7)] = {
+const u8 maps_002[26+(4*13)+(4*9)+(4*4)+(3*7)+(3*0)] = {
 	7, //Suelo
 	6, // Muros
 	8, // Suelo falso
@@ -157,17 +121,20 @@ const u8 maps_002[25+(4*13)+(4*9)+(4*4)+(2*7)] = {
 	13, 11, //Portal Final
 	
 	7, // Número de generadores
-	GENERATOR_CREATE(2,15)
-	GENERATOR_CREATE(1,20)
-	GENERATOR_CREATE(2,27)
-	GENERATOR_CREATE(9,26)
-	GENERATOR_CREATE(12,2)
+	ENEMY_CREATE(2,15,1)
+	ENEMY_CREATE(1,20,1)
+	ENEMY_CREATE(2,27,1)
+	ENEMY_CREATE(9,26,1)
+	ENEMY_CREATE(12,2,1)
 	
-	GENERATOR_CREATE(17,24)
-	GENERATOR_CREATE(25,8)
+	ENEMY_CREATE(17,24,1)
+	ENEMY_CREATE(25,8,1)
+
+	0, // Number of golds
+
 };
 
-const u8 maps_003[25+(4*25)+(4*5)+(4*0)+(2*8)] = {
+const u8 maps_003[26+(4*25)+(4*5)+(4*0)+(3*10)+(3*0)] = {
 	3, //Suelo
 	25, // Muros
 	4, // Suelo falso
@@ -217,22 +184,24 @@ const u8 maps_003[25+(4*25)+(4*5)+(4*0)+(2*8)] = {
 
 	2, 2, //Portal Final
 
-	8, // Número de generadores
-	GENERATOR_CREATE(1,9)
-	GENERATOR_CREATE(2,14)
-	GENERATOR_CREATE(2,23)
-	GENERATOR_CREATE(8,29)
-	GENERATOR_CREATE(25,29)
+	10, // Número de generadores
+	ENEMY_CREATE(1,9,1)
+	ENEMY_CREATE(2,14,1)
+	ENEMY_CREATE(2,23,1)
+	ENEMY_CREATE(8,29,1)
+	ENEMY_CREATE(25,29,1)
 	
-	GENERATOR_CREATE(28,9)
-	GENERATOR_CREATE(20,23)
-	GENERATOR_CREATE(6,15)
-	GENERATOR_CREATE(10,7)
-	GENERATOR_CREATE(21,13)
+	ENEMY_CREATE(28,9,1)
+	ENEMY_CREATE(20,23,1)
+	ENEMY_CREATE(6,15,1)
+	ENEMY_CREATE(10,7,1)
+	ENEMY_CREATE(20,13,1)
+
+	0, // Number of golds
 
 };
 
-const u8 maps_004[25+(4*5)+(4*0)+(4*0)+(2*8)] = {
+const u8 maps_004[26+(4*5)+(4*0)+(4*0)+(3*8)+(3*0)] = {
 	7, //Suelo
 	13, // Muros
 	8, // Suelo falso
@@ -253,18 +222,21 @@ const u8 maps_004[25+(4*5)+(4*0)+(4*0)+(2*8)] = {
 	1, 28, //Portal Final
 
 	8, // Número de generadores
-	GENERATOR_CREATE(6,6)
-	GENERATOR_CREATE(25,2)
-	GENERATOR_CREATE(12,13)
-	GENERATOR_CREATE(24,13)
-	GENERATOR_CREATE(9,19)
+	ENEMY_CREATE(6,6,1)
+	ENEMY_CREATE(25,2,1)
+	ENEMY_CREATE(12,13,1)
+	ENEMY_CREATE(24,13,1)
+	ENEMY_CREATE(9,19,1)
 	
-	GENERATOR_CREATE(3,24)
-	GENERATOR_CREATE(21,23)
-	GENERATOR_CREATE(14,29)
+	ENEMY_CREATE(3,24,1)
+	ENEMY_CREATE(21,23,1)
+	ENEMY_CREATE(14,29,1)
+
+	0, // Number of golds
+
 };
 
-const u8 maps_005[25+(4*22)+(4*4)+(4*4)+(2*8)] = {
+const u8 maps_005[26+(4*22)+(4*4)+(4*4)+(3*8)+(3*0)] = {
 	7, //Suelo
 	13, // Muros
 	8, // Suelo falso
@@ -305,8 +277,6 @@ const u8 maps_005[25+(4*22)+(4*4)+(4*4)+(2*8)] = {
 	OBSTACLE_CREATE_DIAGONAL_LINE(4,1,14,11)
 	OBSTACLE_CREATE_DIAGONAL_LINE(21,1,30,10)
 
-
-
 	4, // Número de portales
 	14, 16, 16, 13,
 	16, 16, 14, 13,
@@ -316,18 +286,21 @@ const u8 maps_005[25+(4*22)+(4*4)+(4*4)+(2*8)] = {
 	3, 3, //Portal Final
 
 	8, // Número de generadores
-	GENERATOR_CREATE(1,3)
-	GENERATOR_CREATE(5,10)
-	GENERATOR_CREATE(7,22)
-	GENERATOR_CREATE(9,17)
-	GENERATOR_CREATE(18,4)
+	ENEMY_CREATE(1,3,1)
+	ENEMY_CREATE(5,10,1)
+	ENEMY_CREATE(7,22,1)
+	ENEMY_CREATE(9,17,1)
+	ENEMY_CREATE(18,4,1)
 	
-	GENERATOR_CREATE(18,24)
-	GENERATOR_CREATE(23,20)
-	GENERATOR_CREATE(24,11)
+	ENEMY_CREATE(18,24,1)
+	ENEMY_CREATE(23,20,1)
+	ENEMY_CREATE(24,11,1)
+	
+	0, // Number of golds
+
 };
 
-const u8 maps_006[25+(4*4)+(4*2)+(4*4)+(2*10)] = {
+const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*0)] = {
 	22, //Suelo
 	11, // Muros
 	27, // Suelo falso
@@ -353,25 +326,35 @@ const u8 maps_006[25+(4*4)+(4*2)+(4*4)+(2*10)] = {
 	24, 14, //Portal Final
 
 	10, // Número de generadores
-	GENERATOR_CREATE(17,2)
-	GENERATOR_CREATE(26,4)
-	GENERATOR_CREATE(29,15)
-	GENERATOR_CREATE(30,19)
-	GENERATOR_CREATE(29,23)
+	ENEMY_CREATE(17,2,1)
+	ENEMY_CREATE(26,4,1)
+	ENEMY_CREATE(29,15,1)
+	ENEMY_CREATE(30,19,1)
+	ENEMY_CREATE(29,23,1)
 	
-	GENERATOR_CREATE(15,19)
-	GENERATOR_CREATE(13,28)
-	GENERATOR_CREATE(5,20)
-	GENERATOR_CREATE(10,9)
-	GENERATOR_CREATE(21,10)
+	ENEMY_CREATE(15,19,1)
+	ENEMY_CREATE(13,28,1)
+	ENEMY_CREATE(5,20,1)
+	ENEMY_CREATE(10,9,1)
+	ENEMY_CREATE(21,10,1)
+
+	0, // Number of golds
 };
 
 
 void reset_enemies(){
-	TEnemy* p;
+	u8* p;
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;i++){
-		p = &enemies[i];
-		p->lives = 0;
+		p = &enemies[i].lives;
+		(*p) = 0;
+	}
+}
+
+void reset_objects(){
+	u8* p;
+	for(u8 i=0;i<MAX_OBJECTS_SCREEN;i++){
+		p = &objects[i].picked;
+		(*p) = 1;
 	}
 }
 
@@ -382,8 +365,9 @@ void map_load(u8* map){
 	u8* ptilemap = (u8*) &g_building;
 	TEnemy* enemy_aux_pointer;
 	TPortal* portal_aux_pointer;
+	TObject* object_aux_pointer;
 	u8 index = 4;
-	u8 n_d_obstacles, n_nd_obstacles, n_portals, n_generators;
+	u8 n_d_obstacles, n_nd_obstacles, n_portals, n_enemies, n_objects;
 	u8 direction; // 0 Down, 1 Up
 	u8 k_aux, j_aux;
 	
@@ -454,24 +438,62 @@ void map_load(u8* map){
 	ptilemap[(map[index+1]+1) * g_building_W + map[index]] = 23;
 
 	reset_enemies();
+	reset_objects();
 
-	// Fill generators
+	// Fill enemies
 	index += 2;
-	n_generators = map[index];
+	n_enemies = map[index];
 	index++;
-	for(u8 i = 0;i < n_generators;++i){
+	for(u8 i = 0;i < n_enemies;++i){		
 		enemy_aux_pointer = &enemies[i];
+
+		if(map[index+2] == 1){
+			enemy_aux_pointer->perform_action = spawn_enemy;		
+			enemy_aux_pointer->lives = 2;
+			enemy_aux_pointer->stpa = 5;
+			enemy_aux_pointer->sprite = (u8*) &g_monster_portal;
+		}else if(map[index+2] == 2){
+			enemy_aux_pointer->perform_action = chase_hero;		
+			enemy_aux_pointer->lives = 1;
+			enemy_aux_pointer->stpa = 2;
+			enemy_aux_pointer->sprite = (u8*) &g_crab_frontal;
+		}else if(map[index+2] == 3){
+			enemy_aux_pointer->perform_action = chase_and_shot;		
+			enemy_aux_pointer->lives = 1;
+			enemy_aux_pointer->stpa = 3;
+			enemy_aux_pointer->sprite = (u8*) &g_wizard_frontal;
+		}else{
+			enemy_aux_pointer->perform_action = shot_objective;		
+			enemy_aux_pointer->lives = 1;
+			enemy_aux_pointer->stpa = 4;
+			enemy_aux_pointer->sprite = (u8*) &g_demon_frontal;
+		}
+
 		enemy_aux_pointer->x = map[index]*4;
 		enemy_aux_pointer->y = map[index+1]*8;
-		enemy_aux_pointer->perform_action = spawn_enemy;
 		enemy_aux_pointer->ctpa = 0;
-		enemy_aux_pointer->lives = 2;
-		enemy_aux_pointer->stpa = 5;
-		enemy_aux_pointer->sprite = (u8*) &g_monster_portal;
-		index += 2;
+		index += 3;
 	}
+	
 
-	// Paint score and health
-	print_score();
-	print_health();
+	// Fill objects
+	n_objects = map[index];
+	index++;
+	for(u8 i = 0;i < n_objects;++i){
+		object_aux_pointer = &objects[i];
+
+		if(map[index+2] == 1){
+			object_aux_pointer->perform_action = increase_heal;		
+			object_aux_pointer->picked = 0;
+			object_aux_pointer->sprite = (u8*) &g_heart;
+		}else{
+			object_aux_pointer->perform_action = add_score;		
+			object_aux_pointer->picked = 0;
+			object_aux_pointer->sprite = (u8*) &g_coin;
+		}
+
+		object_aux_pointer->x = map[index]*4;
+		object_aux_pointer->y = map[index+1]*8;
+		index += 3;
+	}
 }

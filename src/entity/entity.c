@@ -31,6 +31,7 @@
 #include <sprites/demon_inferior_derecha.h>
 #include <sprites/heart.h>
 #include <sprites/coin.h>
+#include <sprites/bola_fuego.h>
 #include <tilemap/map1.h>           // Automatically generated g_building tilemap declarations
 
 #define INIT_BULLET {0xFF, 0, 0}
@@ -55,6 +56,7 @@ const u8 n_enemy_objective_bullets_on_screen = 0;
 u8 current_iteration = 0;
 const u8* current_map;
 u8 current_index = 0;
+const u8 last_level = 6;
 
 const u8 bullet_table_x[8] = {
 	HERO_WIDTH/2 - BULLETS_WIDTH/2, 	//up
@@ -198,6 +200,7 @@ void fill_enemy(TEnemy* p, u8 x, u8 y){
 	p->lives++;
 	p->perform_action = chase_hero;
 	p->stpa = 0;
+	p->sprite = (u8*)&g_crab_frontal;
 }
 
 void spawn_enemy(u8* enemy){
@@ -267,14 +270,10 @@ void chase_and_shot(u8* enemy){ //Wizard Loquillo
 	else if (ptr_enemy->ldf == 4)	{ ptr_enemy->sprite = (u8*) &g_wizard_superior_izquierda; }		// Up-left
 	else if (ptr_enemy->ldf == 5)	{ ptr_enemy->sprite = (u8*) &g_wizard_superior_derecha; }		// Up-right
 	else if (ptr_enemy->ldf == 6)	{ ptr_enemy->sprite = (u8*) &g_wizard_frontal; }				// Down-left
-	else if (ptr_enemy->ldf == 7)	{ ptr_enemy->sprite = (u8*) &g_wizard_frontal; }				// Down-right
+	else { ptr_enemy->sprite = (u8*) &g_wizard_frontal; }				// Down-right
 	
 	shot(1, enemy);
 }
-
-/*void just_objective_shot(u8* enemy){ // Demon loquillo
-
-}*/
 
 void chase_hero(u8* enemy){ //Fantasmita
 	bool left = false, right = false;
@@ -351,7 +350,7 @@ void chase_hero(u8* enemy){ //Fantasmita
 		else 			{ ptr_enemy->ldf = 0; ptr_enemy->sprite = (u8*) &g_crab_trasera;}
 	}
 	// Check down
-	else {
+	else if (hero.y > (*p)){
 
 		tile1_x = *(p - 1);
 		tile1_y = (*p) + ENEMY_HEIGHT;
@@ -454,9 +453,11 @@ void init_hero(){
 	(*p) = p_to_maps[0];
 	current_index = 0;
 
+	hero.won = 0;
 	hero.x = HERO_START_X_RELATIVE;
 	hero.y = HERO_START_Y_RELATIVE;
-	hero.lives = 1;
+	hero.lives = 5;
+	hero.score = 0;
 	hero.sprite = (u8*) &g_hero_frontal;
 
 	scroll_x = 0;
@@ -468,31 +469,47 @@ void init_hero(){
 }
 
 void next_level(){
+
 	u8** p = &current_map;
-	u8* pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 16, 85);
+	u8* pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 14, 85);
 	u8 s10 = ((current_index + 2) / 10) + 48;
 	u8 s1 = ((current_index + 2) % 10) + 48;
-	(*p) = p_to_maps[++current_index];
 
-	cpct_memset(video_getBackBufferPtr(), 1, 16000);
-	//cpct_drawSolidBox(video_getBackBufferPtr(), 0, VIEWPORT_WB, VIEWPORT_HP);
-	cpct_drawStringM0("Next level: ", pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR);
+	current_index++;
+	if(current_index == last_level){
+	
+		hero.won = 1;
+	
+	}else{
 
-	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 62, 85);
-	cpct_drawCharM0(pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR, s10);
+		(*p) = p_to_maps[current_index];
 
-	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 67, 85);
-	cpct_drawCharM0(pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR, s1);
+		/*cpct_memset(video_getBackBufferPtr(), 0, 16000);
+		video_switchBuffers();
+		cpct_memset(video_getBackBufferPtr(), 0, 16000);
+		video_switchBuffers();*/
 
-	video_switchBuffers();
+		cpct_drawSolidBox(video_getBackBufferPtr(), 240, 64, VIEWPORT_HP);
+		cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), 64, 0), 240, 16, VIEWPORT_HP);
 
-	//cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
-	for (u16 i = 0; i < 800; i++){
+		cpct_drawStringM0("Next level: ", pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR);
 
-		cpct_waitVSYNC();
-	}
+		pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 61, 85);
+		cpct_drawCharM0(pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR, s10);
 
-	map_load((u8*)current_map);
+		pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 65, 85);
+		cpct_drawCharM0(pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR, s1);
+
+		video_switchBuffers();
+
+		//cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
+		for (u16 i = 0; i < 800; i++){
+
+			cpct_waitVSYNC();
+		}
+
+		map_load((u8*)current_map);
+	}	
 }
 
 void perform_teletransportation(){
@@ -762,7 +779,7 @@ void update_bullets_aux(TBullet* bullets_array, u8 size, u8* n_bullets){
 					}
 					break;
 				case 3:
-					if(bullets_pointer[i].x - screen_x < (VIEWPORT_WB - BULLETS_WIDTH + 3)){
+					if(bullets_pointer[i].x - screen_x < (VIEWPORT_WB - BULLETS_WIDTH - 4)){
 						bullets_pointer[i].x += 4;
 					}else{
 						bullets_pointer[i].x = 0xFF;
@@ -792,7 +809,7 @@ void update_bullets_aux(TBullet* bullets_array, u8 size, u8* n_bullets){
 						n_bullets--;
 						break;
 					}
-					if(bullets_pointer[i].x - screen_x < (VIEWPORT_WB - BULLETS_WIDTH + 3)){
+					if(bullets_pointer[i].x - screen_x < (VIEWPORT_WB - BULLETS_WIDTH - 4)){
 						bullets_pointer[i].x += 4;
 					}else{
 						bullets_pointer[i].x = 0xFF;
@@ -947,8 +964,17 @@ void check_collision_bullets_enemies(){
 			pbullet = (u8*)&bullets_enemies[i];
 			(*pbullet) = 0xFF;
 			hero.lives--;
+			print_health();
 		}
 	}
+	for(u8 i=0;i<MAX_NUMBER_OBJECTIVE_BULLETS;++i){
+        if(bullets_enemies_objective[i].x != 0xFF && check_collision_items((u8*)&bullets_enemies_objective[i], BULLETS_WIDTH, BULLETS_HEIGHT, (u8*)&hero, HERO_WIDTH, HERO_HEIGHT)){
+            pbullet = (u8*)&bullets_enemies_objective[i];
+            (*pbullet) = 0xFF;
+            hero.lives--;
+			print_health();	
+        }
+    }
 }
 
 void check_collision_enemies_hero(){
@@ -987,46 +1013,37 @@ void update_bullets(){
 	}
 
 	update_objective_bullets();
+	update_bullets_aux(bullets_enemies, MAX_BULLETS_ENEMY-1, n_bullets);
+
+	check_collision_bullets_enemies();
 
 
-	/*n_bullets = (u8*)n_enemy_bullets_on_screen;
-	if((*n_bullets)){
-		check_collision_bullets_enemies();
-		update_bullets_aux(bullets_enemies, MAX_BULLETS_ENEMY-1, n_bullets);
-	}*/
-}
 
-void draw_portals(){
-	//16
-	//21
-	for(u8 i=0;i<MAX_PORTALS_SCREEN;++i){
-
-	}
-
+	//n_bullets = (u8*)n_enemy_bullets_on_screen;
+	//if((*n_bullets)){
+	//}
 }
 
 void draw_bullets(){
-
+	u8 j = MAX_BULLETS_ENEMY-1;
 	// 0: up, 1: down, 2: left, 3: right, 4:up-left, 5:up-right, 6:down-left, 
 	if (bullet_hero.x != 0xFF){
-		cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x - screen_x, bullet_hero.y - screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);	
+		cpct_drawSpriteMasked((u8*)&g_bola_fuego, cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x - screen_x, bullet_hero.y - screen_y), BULLETS_WIDTH, BULLETS_HEIGHT);			
 	}
 
 	// Objective bullets
 	for (int i = 0; i < MAX_NUMBER_OBJECTIVE_BULLETS; i++){
 
 		if (bullets_enemies_objective[i].x != null){
-
-			cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), bullets_enemies_objective[i].x - screen_x, bullets_enemies_objective[i].y - screen_y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);	
+			cpct_drawSpriteMasked((u8*)&g_bola_fuego, cpct_getScreenPtr(video_getBackBufferPtr(), bullets_enemies_objective[i].x - screen_x, bullets_enemies_objective[i].y - screen_y), BULLETS_WIDTH, BULLETS_HEIGHT);			
 		}
 	}
 	
-	/*u8 i = MAX_BULLETS_HERO-1;
 	do {
-		if(bullets_hero[i].x != 0xFF){
-			cpct_drawSolidBox(cpct_getScreenPtr(CPCT_VMEM_START, bullets_hero[i].x, bullets_hero[i].y), 30, BULLETS_WIDTH, BULLETS_HEIGHT);	
+		if(bullets_enemies[j].x != 0xFF){
+			cpct_drawSpriteMasked((u8*)&g_bola_fuego, cpct_getScreenPtr(video_getBackBufferPtr(), bullets_enemies[j].x - screen_x, bullets_enemies[j].y - screen_y), BULLETS_WIDTH, BULLETS_HEIGHT);			
 		}
-    } while(i--);*/
+    } while(j--);
 
 }
 

@@ -53,7 +53,7 @@ void video_initBuffers(){
 
     // Hardware backbuffer has to be cleared as it usually has code in it that
     // would be displayed as coloured pixels if not set to 0.
-    cpct_memset(HW_BACKBUFFER, 0, 0x4000);  // 16K HW_BACKBUFFER set to 0
+    cpct_memset(HW_BACKBUFFER, 240, 0x4000);  // 16K HW_BACKBUFFER set to 0
     // First call to video Switch Buffers will initialize video_buffer global
     // variable containing a pointer to the current hardware backbuffer.
     // This call will also set CRTC registers that will left video_buffer 
