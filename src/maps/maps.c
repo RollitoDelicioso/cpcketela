@@ -396,12 +396,12 @@ const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*4)] = {
 	18,9,1,
 };
 
-const u8 maps_007[26+(4*8)+(4*3)+(4*3)+(3*24)+(3*6)] = {
+const u8 maps_007[26+(4*13)+(4*3)+(4*3)+(3*24)+(3*6)] = {
 	12, //Suelo
 	5, // Muros
 	17, // Suelo falso
 	
-	4 + 8, // Número de obstaculos no diagonales
+	4 + 13, // Número de obstaculos no diagonales
 	OBSTACLE_CREATE_RECTANGLE(0,0,31,31)
 	
 	OBSTACLE_CREATE_LINE(1,11,30,11)
