@@ -1,5 +1,5 @@
 //
-// File img/map1.tmx converted to csv using cpct_tmx2csv [20180606 22:16:13 CEST]
+// File img/map1.tmx converted to csv using cpct_tmx2csv [20180606 23:40:20 CEST]
 //   * Width:  32 columns (32 bytes, 8 bits per column)
 //   * Height: 32 rows
 //   * Bytes:  1024 bytes (32 x 32)

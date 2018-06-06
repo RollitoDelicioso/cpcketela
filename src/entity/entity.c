@@ -56,7 +56,7 @@ const u8 n_enemy_objective_bullets_on_screen = 0;
 u8 current_iteration = 0;
 const u8* current_map;
 u8 current_index = 0;
-const u8 last_level = 6;
+const u8 last_level = 7;
 
 const u8 bullet_table_x[8] = {
 	HERO_WIDTH/2 - BULLETS_WIDTH/2, 	//up
@@ -157,6 +157,8 @@ void shot_objective(u8* enemy){		// Demon loquillo
 	bool left = false, right = false;
 	u8* p = enemy;
 	TEnemy* ptr_enemy = (TEnemy*) enemy;
+
+	
 
 	// Check left
 	if (hero.x < (*p)){
@@ -409,9 +411,9 @@ void update_enemies(){
 	}
 
 	for(u8 i = current_iteration; i < current_iteration+MAX_NUMBER_OF_UPDATED_ENEMYS; ++i){
-		if(enemies[i].lives > 0){
-				p = &enemies[i].ctpa;
-				p2 = &enemies[i].stpa;
+		if(enemies[i].lives > 0 && video_isInsideViewport(screen_x, screen_y, enemies[i].x, enemies[i].y, BULLETS_WIDTH, BULLETS_HEIGHT)){
+			p = &enemies[i].ctpa;
+			p2 = &enemies[i].stpa;
 			if((*p) >= (*p2)){
 				enemies[i].perform_action((u8*)&enemies[i]);
 				(*p) = 0;
@@ -466,6 +468,9 @@ void init_hero(){
 	screen_x = 0;
 	screen_y = 0;
 	offset = 0;
+
+	cpct_memset(&bullets_enemies_objective, 0xFF, 7*MAX_NUMBER_OBJECTIVE_BULLETS);
+	cpct_memset(&bullets_enemies, 0xFF, 3*MAX_BULLETS_ENEMY);
 }
 
 void next_level(){
@@ -864,34 +869,39 @@ void update_objective_bullets(){
 		// If bullet is in use
 		if (obullet->x != null){
 
-			// Check the direction of the bullet: If increment is positive, start < end
-			if (obullet->increment > 0){
 
-				// If bullet has not reached the target
-				if (obullet->x < obullet->x_end){
+			if(video_isInsideViewport(screen_x, screen_y, obullet->x, obullet->y, BULLETS_WIDTH, BULLETS_HEIGHT)){
+				// Check the direction of the bullet: If increment is positive, start < end
+				if (obullet->increment > 0){
 
-					obullet->x += obullet->increment;
-					obullet->y = obullet->y_end + obullet->m * obullet->x - obullet->m * obullet->x_end;
+					// If bullet has not reached the target
+					if (obullet->x < obullet->x_end){
+
+						obullet->x += obullet->increment;
+						obullet->y = obullet->y_end + obullet->m * obullet->x - obullet->m * obullet->x_end;
+					}
+					else {
+
+						obullet->x = null;
+					}
 				}
+				// If increment is not positive, start > end
 				else {
 
-					obullet->x = null;
+					// If bullet has not reached the target
+					if (obullet->x > obullet->x_end){
+
+						obullet->x += obullet->increment;
+						obullet->y = obullet->y_end + obullet->m * obullet->x - obullet->m * obullet->x_end;
+					}
+					else {
+
+						obullet->x = null;
+					}
+
 				}
-			}
-			// If increment is not positive, start > end
-			else {
-
-				// If bullet has not reached the target
-				if (obullet->x > obullet->x_end){
-
-					obullet->x += obullet->increment;
-					obullet->y = obullet->y_end + obullet->m * obullet->x - obullet->m * obullet->x_end;
-				}
-				else {
-
-					obullet->x = null;
-				}
-
+			}else{
+				obullet->x = null;
 			}
 		}
 	}
@@ -1026,6 +1036,7 @@ void update_bullets(){
 
 void draw_bullets(){
 	u8 j = MAX_BULLETS_ENEMY-1;
+	u8* p;
 	// 0: up, 1: down, 2: left, 3: right, 4:up-left, 5:up-right, 6:down-left, 
 	if (bullet_hero.x != 0xFF){
 		cpct_drawSpriteMasked((u8*)&g_bola_fuego, cpct_getScreenPtr(video_getBackBufferPtr(), bullet_hero.x - screen_x, bullet_hero.y - screen_y), BULLETS_WIDTH, BULLETS_HEIGHT);			
@@ -1035,7 +1046,12 @@ void draw_bullets(){
 	for (int i = 0; i < MAX_NUMBER_OBJECTIVE_BULLETS; i++){
 
 		if (bullets_enemies_objective[i].x != null){
-			cpct_drawSpriteMasked((u8*)&g_bola_fuego, cpct_getScreenPtr(video_getBackBufferPtr(), bullets_enemies_objective[i].x - screen_x, bullets_enemies_objective[i].y - screen_y), BULLETS_WIDTH, BULLETS_HEIGHT);			
+			if(video_isInsideViewport(screen_x, screen_y, bullets_enemies_objective[i].x, bullets_enemies_objective[i].y, BULLETS_WIDTH, BULLETS_HEIGHT)){
+				cpct_drawSpriteMasked((u8*)&g_bola_fuego, cpct_getScreenPtr(video_getBackBufferPtr(), bullets_enemies_objective[i].x - screen_x, bullets_enemies_objective[i].y - screen_y), BULLETS_WIDTH, BULLETS_HEIGHT);			
+			}else{
+				p = &bullets_enemies_objective[i].x;
+				(*p) = null;
+			}
 		}
 	}
 	

@@ -13,10 +13,10 @@
 
 
 
-u8* const p_to_maps[6] = {maps_001, maps_002, maps_003, maps_004, maps_005, maps_006};
+u8* const p_to_maps[7] = {maps_001, maps_002, maps_003, maps_004, maps_005, maps_006, maps_007};
 
 // Maps
-const u8 maps_001[26+(4*18)+(4*4)+(4*2)+(3*9)+(3*2)] = {
+const u8 maps_001[26+(4*18)+(4*4)+(4*2)+(3*13)+(3*4)] = {
 	0, //Suelo
 	14, // Muros
 	1, // Suelo falso
@@ -59,7 +59,7 @@ const u8 maps_001[26+(4*18)+(4*4)+(4*2)+(3*9)+(3*2)] = {
 
 	1, 3, //Portal Final
 	
-	9, // Número de generadores
+	13, // Número de enemies
 	ENEMY_CREATE(4,10,3)
 	ENEMY_CREATE(5,18,1)
 	ENEMY_CREATE(13,7,1)
@@ -70,13 +70,21 @@ const u8 maps_001[26+(4*18)+(4*4)+(4*2)+(3*9)+(3*2)] = {
 	ENEMY_CREATE(22,4,1)
 	ENEMY_CREATE(22,18,1)
 	ENEMY_CREATE(28,10,1)
+	ENEMY_CREATE(12,10,4)
+	
+	ENEMY_CREATE(22,20,4)
+	ENEMY_CREATE(28,26,3)
+	ENEMY_CREATE(22,6,3)
 
-	2, // Number of golds
-	2,14,2,
-	12,14,1,
+
+	4, // Number of golds
+	3,26,1,
+	16,29,1,
+	3,28,2,
+	8,2,2,
 };
 
-const u8 maps_002[26+(4*13)+(4*9)+(4*4)+(3*7)+(3*0)] = {
+const u8 maps_002[26+(4*13)+(4*9)+(4*4)+(3*11)+(3*6)] = {
 	7, //Suelo
 	6, // Muros
 	8, // Suelo falso
@@ -120,7 +128,7 @@ const u8 maps_002[26+(4*13)+(4*9)+(4*4)+(3*7)+(3*0)] = {
 
 	13, 11, //Portal Final
 	
-	7, // Número de generadores
+	11, // Número de enemies
 	ENEMY_CREATE(2,15,1)
 	ENEMY_CREATE(1,20,1)
 	ENEMY_CREATE(2,27,1)
@@ -129,9 +137,20 @@ const u8 maps_002[26+(4*13)+(4*9)+(4*4)+(3*7)+(3*0)] = {
 	
 	ENEMY_CREATE(17,24,1)
 	ENEMY_CREATE(25,8,1)
+	ENEMY_CREATE(8,10,3)
+	ENEMY_CREATE(7,14,3)
+	ENEMY_CREATE(16,18,4)
 
-	0, // Number of golds
+	ENEMY_CREATE(5,2,3)
 
+
+	6, // Number of golds
+	13,16,2,
+	10,18,1,
+	18,21,2,
+	26,22,2,
+	7,3,1,
+	29,24,2,
 };
 
 const u8 maps_003[26+(4*25)+(4*5)+(4*0)+(3*10)+(3*0)] = {
@@ -184,7 +203,7 @@ const u8 maps_003[26+(4*25)+(4*5)+(4*0)+(3*10)+(3*0)] = {
 
 	2, 2, //Portal Final
 
-	10, // Número de generadores
+	10, // Número de enemies
 	ENEMY_CREATE(1,9,1)
 	ENEMY_CREATE(2,14,1)
 	ENEMY_CREATE(2,23,1)
@@ -201,7 +220,7 @@ const u8 maps_003[26+(4*25)+(4*5)+(4*0)+(3*10)+(3*0)] = {
 
 };
 
-const u8 maps_004[26+(4*5)+(4*0)+(4*0)+(3*8)+(3*0)] = {
+const u8 maps_004[26+(4*5)+(4*0)+(4*0)+(3*8)+(3*3)] = {
 	7, //Suelo
 	13, // Muros
 	8, // Suelo falso
@@ -221,7 +240,7 @@ const u8 maps_004[26+(4*5)+(4*0)+(4*0)+(3*8)+(3*0)] = {
 
 	1, 28, //Portal Final
 
-	8, // Número de generadores
+	8, // Número de enemies
 	ENEMY_CREATE(6,6,1)
 	ENEMY_CREATE(25,2,1)
 	ENEMY_CREATE(12,13,1)
@@ -232,11 +251,14 @@ const u8 maps_004[26+(4*5)+(4*0)+(4*0)+(3*8)+(3*0)] = {
 	ENEMY_CREATE(21,23,1)
 	ENEMY_CREATE(14,29,1)
 
-	0, // Number of golds
+	3, // Number of golds
+	5,6,2,
+	13,14,2,
+	10,19,2,
 
 };
 
-const u8 maps_005[26+(4*22)+(4*4)+(4*4)+(3*8)+(3*0)] = {
+const u8 maps_005[26+(4*22)+(4*4)+(4*4)+(3*13)+(3*7)] = {
 	7, //Suelo
 	13, // Muros
 	8, // Suelo falso
@@ -285,7 +307,7 @@ const u8 maps_005[26+(4*22)+(4*4)+(4*4)+(3*8)+(3*0)] = {
 
 	3, 3, //Portal Final
 
-	8, // Número de generadores
+	13, // Número de enemies
 	ENEMY_CREATE(1,3,1)
 	ENEMY_CREATE(5,10,1)
 	ENEMY_CREATE(7,22,1)
@@ -295,12 +317,26 @@ const u8 maps_005[26+(4*22)+(4*4)+(4*4)+(3*8)+(3*0)] = {
 	ENEMY_CREATE(18,24,1)
 	ENEMY_CREATE(23,20,1)
 	ENEMY_CREATE(24,11,1)
+	ENEMY_CREATE(21,23,1)
+	ENEMY_CREATE(23,23,4)
+
+	ENEMY_CREATE(2,9,1)
+	ENEMY_CREATE(8,8,1)
+	ENEMY_CREATE(7,12,3)
+
 	
-	0, // Number of golds
+	7, // Number of golds
+	24,28,1,
+	27,27,1,
+	29,25,1,
+	17,1,2,
+	18,1,2,
+	19,1,2,
+	7,5,1,
 
 };
 
-const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*0)] = {
+const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*4)] = {
 	22, //Suelo
 	11, // Muros
 	27, // Suelo falso
@@ -325,7 +361,7 @@ const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*0)] = {
 
 	24, 14, //Portal Final
 
-	10, // Número de generadores
+	10, // Número de enemies
 	ENEMY_CREATE(17,2,1)
 	ENEMY_CREATE(26,4,1)
 	ENEMY_CREATE(29,15,1)
@@ -338,7 +374,101 @@ const u8 maps_006[26+(4*4)+(4*2)+(4*4)+(3*10)+(3*0)] = {
 	ENEMY_CREATE(10,9,1)
 	ENEMY_CREATE(21,10,1)
 
-	0, // Number of golds
+	ENEMY_CREATE(20,24,3)
+	ENEMY_CREATE(22,27,3)
+	ENEMY_CREATE(7,23,1)
+	ENEMY_CREATE(2,22,1)
+	ENEMY_CREATE(21,10,1)
+
+	ENEMY_CREATE(9,14,4)
+	ENEMY_CREATE(20,15,1)
+	ENEMY_CREATE(5,28,1)
+	ENEMY_CREATE(13,28,3)
+	ENEMY_CREATE(8,18,4)
+
+	ENEMY_CREATE(13,4,1)
+
+	4, // Number of golds
+	11,15,2,
+	13,15,2,
+	12,14,1,
+	12,16,1,
+	18,9,1,
+};
+
+const u8 maps_007[26+(4*8)+(4*3)+(4*3)+(3*24)+(3*6)] = {
+	12, //Suelo
+	5, // Muros
+	17, // Suelo falso
+	
+	4 + 8, // Número de obstaculos no diagonales
+	OBSTACLE_CREATE_RECTANGLE(0,0,31,31)
+	
+	OBSTACLE_CREATE_LINE(1,11,30,11)
+	OBSTACLE_CREATE_LINE(14,3,16,3)
+	OBSTACLE_CREATE_LINE(26,3,29,3)
+	OBSTACLE_CREATE_LINE(29,3,29,8)
+	OBSTACLE_CREATE_LINE(25,8,29,8)
+
+	OBSTACLE_CREATE_LINE(1,19,15,19)
+	OBSTACLE_CREATE_LINE(15,15,15,19)
+	OBSTACLE_CREATE_LINE(12,19,12,27)
+	OBSTACLE_CREATE_LINE(3,24,8,24)
+	OBSTACLE_CREATE_LINE(8,24,8,30)
+
+	OBSTACLE_CREATE_LINE(20,11,20,30)
+	OBSTACLE_CREATE_LINE(21,18,28,18)
+	OBSTACLE_CREATE_LINE(28,12,28,18)
+
+	3, // Número de obstaculos diagonales
+	OBSTACLE_CREATE_DIAGONAL_LINE(7,10,14,3)
+	OBSTACLE_CREATE_DIAGONAL_LINE(16,3,21,8)
+	OBSTACLE_CREATE_DIAGONAL_LINE(21,8,26,3)
+
+	3, // Número de portales
+	26, 14, 3, 5,
+	28, 5, 3, 14,
+	2, 28, 29, 13,
+
+	26, 27, //Portal Final
+
+	24, // Número de enemies
+	ENEMY_CREATE(5,8,1)
+	ENEMY_CREATE(7,5,1)
+	ENEMY_CREATE(10,2,1)
+	ENEMY_CREATE(16,5,4)
+	ENEMY_CREATE(18,9,3)
+	
+	ENEMY_CREATE(21,4,1)
+	ENEMY_CREATE(26,5,4)
+	ENEMY_CREATE(24,9,1)
+	ENEMY_CREATE(30,6,1)
+	ENEMY_CREATE(2,21,1)
+
+	ENEMY_CREATE(4,27,1)
+	ENEMY_CREATE(22,27,3)
+	ENEMY_CREATE(7,21,1)
+	ENEMY_CREATE(8,17,1)
+	ENEMY_CREATE(10,13,3)
+
+	ENEMY_CREATE(12,16,1)
+	ENEMY_CREATE(17,14,1)
+	ENEMY_CREATE(5,28,1)
+	ENEMY_CREATE(15,22,3)
+	ENEMY_CREATE(17,26,3)
+
+	ENEMY_CREATE(23,23,1)
+	ENEMY_CREATE(25,20,1)
+	ENEMY_CREATE(28,22,1)
+	ENEMY_CREATE(29,26,3)
+
+	6, // Number of golds
+	14,7,1,
+	15,7,1,
+	14,9,2,
+	15,9,2,
+	6,28,2,
+	7,28,1,
 };
 
 
@@ -450,7 +580,7 @@ void map_load(u8* map){
 		if(map[index+2] == 1){
 			enemy_aux_pointer->perform_action = spawn_enemy;		
 			enemy_aux_pointer->lives = 2;
-			enemy_aux_pointer->stpa = 5;
+			enemy_aux_pointer->stpa = 1;
 			enemy_aux_pointer->sprite = (u8*) &g_monster_portal;
 		}else if(map[index+2] == 2){
 			enemy_aux_pointer->perform_action = chase_hero;		
@@ -460,12 +590,12 @@ void map_load(u8* map){
 		}else if(map[index+2] == 3){
 			enemy_aux_pointer->perform_action = chase_and_shot;		
 			enemy_aux_pointer->lives = 1;
-			enemy_aux_pointer->stpa = 3;
+			enemy_aux_pointer->stpa = 1;
 			enemy_aux_pointer->sprite = (u8*) &g_wizard_frontal;
 		}else{
 			enemy_aux_pointer->perform_action = shot_objective;		
 			enemy_aux_pointer->lives = 1;
-			enemy_aux_pointer->stpa = 4;
+			enemy_aux_pointer->stpa = 3;
 			enemy_aux_pointer->sprite = (u8*) &g_demon_frontal;
 		}
 

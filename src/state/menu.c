@@ -68,7 +68,7 @@ void draw_menu(){
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 18, 20);
 	cpct_drawStringM0("Welcome to", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 20, 35);
-	cpct_drawStringM0("CPCKetela", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);	
+	cpct_drawStringM0("UnderWorld", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);	
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 5, 75);
 	cpct_drawStringM0("Press: ", pvmem, MENU_FOREGROUND_COLOR, MENU_BACKGROUND_COLOR);
 	pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 5, 100);
