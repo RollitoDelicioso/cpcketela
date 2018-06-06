@@ -30,6 +30,8 @@
 #include <sprites/demon_lateral_derecha.h>
 #include <sprites/demon_inferior_izquierda.h>
 #include <sprites/demon_inferior_derecha.h>
+#include <sprites/heart.h>
+#include <sprites/coin.h>
 
 #define INIT_BULLET {0xFF, 0, 0}
 #define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
@@ -47,7 +49,7 @@ const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{4,8,0,chase_hero,15,1, 2, (u8*) &g_
 const TBullet bullet_hero = {0xFF,0,0};
 const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {INIT_BULLET, INIT_BULLET, INIT_BULLET};
 const TOBullet bullets_enemies_objective[MAX_BULLETS_ENEMY] = {INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET};
-const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,add_score}, {10,100,0,increase_heal}};
+const TObject objects[MAX_OBJECTS_SCREEN] = {{20,20,0,add_score, (u8*) &g_coin}, {10,100,0,increase_heal, (u8*) &g_heart}};
 const TPortal portals[MAX_PORTALS_SCREEN] = {INIT_PORTAL,INIT_PORTAL,INIT_PORTAL,INIT_PORTAL};
 const TPortalNextMap;
 const u8 n_hero_bullets_on_screen = 0;
@@ -388,6 +390,7 @@ void drop_health(u8* enemy){
 				p = (u8*)&objects[i];
 				pe = (TObject*)&objects[i];
 				pe->perform_action = increase_heal;
+				pe->sprite = (u8*) &g_heart;
 				(*p) = (*enemy);
 				p++;
 				enemy++;
@@ -441,7 +444,8 @@ void draw_objects(){
 	for(u8 i=0;i<MAX_OBJECTS_SCREEN;++i){
 		if(objects[i].picked == 0){
 			if (video_isInsideViewport(screen_x, screen_y, objects[i].x, objects[i].y, OBJECT_WIDTH, OBJECT_HEIGHT)){
-		    	cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), objects[i].x - screen_x, objects[i].y - screen_y), 53, OBJECT_WIDTH, OBJECT_HEIGHT);
+		    	//cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), objects[i].x - screen_x, objects[i].y - screen_y), 53, OBJECT_WIDTH, OBJECT_HEIGHT);
+		    	cpct_drawSpriteMasked(objects[i].sprite, cpct_getScreenPtr(video_getBackBufferPtr(), objects[i].x - screen_x, objects[i].y - screen_y), OBJECT_WIDTH, OBJECT_HEIGHT);
 	    	}
 		}
 	}
@@ -466,7 +470,7 @@ void next_level(){
 	u8 s1 = ((current_index + 2) % 10) + 48;
 	(*p) = p_to_maps[++current_index];
 
-	cpct_memset(video_getBackBufferPtr(), 0, 16000);
+	cpct_memset(video_getBackBufferPtr(), 1, 16000);
 	//cpct_drawSolidBox(video_getBackBufferPtr(), 0, VIEWPORT_WB, VIEWPORT_HP);
 	cpct_drawStringM0("Next level: ", pvmem, NEXT_LEVEL_FOREGROUND_COLOR, NEXT_LEVEL_BACKGROUND_COLOR);
 

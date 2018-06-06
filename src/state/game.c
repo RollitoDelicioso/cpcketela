@@ -79,6 +79,27 @@ void initialize() {
 void gameOver(){
 	//cpct_clearScreen_f64(0);
 	//video_clearScreen();
+	u8* pvmem = 0;
+
+	cpct_memset(video_getBackBufferPtr(), 1, 16000);
+
+	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 20, 85);
+	cpct_drawStringM0("Game Over", pvmem, GAME_OVER_FOREGROUND_COLOR, GAME_OVER_BACKGROUND_COLOR);
+
+	pvmem = cpct_getScreenPtr(video_getBackBufferPtr(), 13, 105);
+	cpct_drawStringM0("Press any key", pvmem, GAME_OVER_FOREGROUND_COLOR, GAME_OVER_BACKGROUND_COLOR);
+
+	video_switchBuffers();
+
+	//cpct_drawStringM0("SCORE", INIT_LETTERS_SCORE_POSITION, SCORE_FOREGROUND_COLOR, SCORE_BACKGROUND_COLOR);
+	/*for (u16 i = 0; i < 800; i++){
+
+		cpct_waitVSYNC();
+	}*/
+	while (cpct_isAnyKeyPressed_f() == 0){
+
+		cpct_scanKeyboard();
+	}
 }
 
 void game(){

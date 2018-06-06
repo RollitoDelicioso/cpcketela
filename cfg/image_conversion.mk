@@ -86,6 +86,12 @@ $(eval $(call IMG2SPRITES,img/demon_inferior_derecha.png,0,g,8,16,$(PALETTE),mas
 ## Enemy sprites - Monster portals
 $(eval $(call IMG2SPRITES,img/monster_portal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 
+## Objects sprites - Heart
+$(eval $(call IMG2SPRITES,img/heart.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+
+## Objects sprites - Coin
+$(eval $(call IMG2SPRITES,img/coin.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+
 #$(eval $(call IMG2SPRITES,img/hero_superior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 #$(eval $(call IMG2SPRITES,img/hero_superior_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 

@@ -47,6 +47,7 @@ typedef struct {
 	u8 y;
 	u8 picked; //0: no 1:yes
 	void (*perform_action)(u8*);
+	const u8* sprite;
 } TObject;
 
 typedef struct {
