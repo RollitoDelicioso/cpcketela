@@ -32,7 +32,7 @@
 # 15: Orange         18: Bright Green     19: Sea Green       20: Bright Cyan
 # 21: Lime           22: Pastel Green     23: Pastel Cyan     24: Bright Yellow
 
-PALETTE={0 1 3 4 6 8 9 10 11 13 15 16 18 20 24 26}
+PALETTE={8 1 3 4 6 0 9 10 11 13 15 16 18 20 24 26}
 #PALETTE={0 6 1 24 20 26 13 10 8 15 18 16 11 3 4 9} Ordenación gimp
 #PALETTE={1 0 2 3 6 9 11 13 15 18 19 20 21 22 23 24}
 #PALETTE={ 0 6 13 10 12 3 9 18 26 15 25 1 14 }
@@ -51,8 +51,23 @@ $(eval $(call IMG2SPRITES,img/tileset.png,0,g,8,8,$(PALETTE),zgtiles,src/tilemap
 
 #$(eval $(call IMG2SPRITES,img/example.png,0,pre,24,12,$(PALETTE),mask,src/,hwpalette))
 
+## Hero sprites
+$(eval $(call IMG2SPRITES,img/hero_frontal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/hero_trasera.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/hero_lateral_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/hero_lateral_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/hero_superior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/hero_superior_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 
+## Enemy sprites - Crab
+$(eval $(call IMG2SPRITES,img/crab_frontal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/crab_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/crab_superior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 
+## Enemy sprites - Monster portals
+$(eval $(call IMG2SPRITES,img/monster_portal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+#$(eval $(call IMG2SPRITES,img/hero_superior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+#$(eval $(call IMG2SPRITES,img/hero_superior_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 
 ############################################################################
 ##              DETAILED INSTRUCTIONS AND PARAMETERS                      ##

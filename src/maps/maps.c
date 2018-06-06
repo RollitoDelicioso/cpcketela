@@ -4,6 +4,7 @@
 #include "entity/entity.h"
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
+#include <sprites/monster_portal.h>
 
 //const u8 index;
 
@@ -153,6 +154,7 @@ void map_load(u8* map){
 		enemy_aux_pointer->ctpa = 0;
 		enemy_aux_pointer->lives = 2;
 		enemy_aux_pointer->stpa = 10;
+		enemy_aux_pointer->sprite = (u8*) &g_monster_portal;
 		indice += 2;
 	}
 

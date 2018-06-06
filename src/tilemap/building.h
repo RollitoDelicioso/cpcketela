@@ -1,5 +1,5 @@
 //
-// File img/building.tmx converted to csv using cpct_tmx2csv [20180606 10:54:50 CEST]
+// File img/building.tmx converted to csv using cpct_tmx2csv [20180606 14:02:59 CEST]
 //   * Width:  32 columns (32 bytes, 8 bits per column)
 //   * Height: 32 rows
 //   * Bytes:  1024 bytes (32 x 32)

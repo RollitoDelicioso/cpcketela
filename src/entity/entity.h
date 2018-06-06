@@ -13,6 +13,7 @@ typedef struct {
 	i8 lives;
 	u16 score;
 	u8 teletransportation;
+	const u8* sprite;
 } THero;
 
 typedef struct {
@@ -23,6 +24,7 @@ typedef struct {
 	u8 ctpa; //count_to_perform_action
 	u8 lives;
 	u8 stpa; //steps_to_perform_action
+	const u8* sprite;
 } TEnemy;
 
 typedef struct {

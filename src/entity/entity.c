@@ -6,11 +6,20 @@
 #include <cpctelera.h>
 #include <tilemap/tileset.h>            // Automatically generated tileset arrays declarations
 #include <tilemap/building.h>           // Automatically generated g_building tilemap declarations
+#include <sprites/hero_frontal.h>
+#include <sprites/hero_trasera.h>
+#include <sprites/hero_lateral_izquierda.h>
+#include <sprites/hero_lateral_derecha.h>
+#include <sprites/hero_superior_izquierda.h>
+#include <sprites/hero_superior_derecha.h>
+#include <sprites/crab_frontal.h>
+#include <sprites/crab_izquierda.h>
+#include <sprites/crab_superior_izquierda.h>
 
 #define INIT_BULLET {0xFF, 0, 0}
 #define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
 #define INIT_PORTAL {0xFF,0,0,0}
-#define INIT_ENEMY {0,0,0,chase_hero,0,0,2}
+#define INIT_ENEMY {0,0,0,chase_hero,0,0,2, (u8*) &g_crab_izquierda}
 #define MAX_NUMBER_OF_UPDATED_ENEMYS 10
 #define START_ITERATION 0
 #define END_ITERATION 30
@@ -19,7 +28,7 @@
 THero hero;
 const u8 s10k, s1k, s100, s10, s1;
 const u8 h100, h10, h1;
-const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{4,8,0,chase_hero,15,1}, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY};
+const TEnemy enemies[MAX_ENEMIES_SCREEN] = {{4,8,0,chase_hero,15,1, 2, (u8*) &g_crab_izquierda}, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY, INIT_ENEMY, INIT_ENEMY, INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY,INIT_ENEMY};
 const TBullet bullet_hero = {0xFF,0,0};
 const TBullet bullets_enemies[MAX_BULLETS_ENEMY] = {INIT_BULLET, INIT_BULLET, INIT_BULLET};
 const TOBullet bullets_enemies_objective[MAX_BULLETS_ENEMY] = {INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET, INIT_OBJECTIVE_BULLET};
@@ -200,8 +209,10 @@ void chase_and_shot(u8* enemy){ //Demonio Loquillo
 }
 
 void chase_hero(u8* enemy){ //Fantasmita
+	bool left = false, right = false;
 	u8* p = enemy;
 	u8* ptilemap = (u8*) &g_building;
+	TEnemy* ptr_enemy = (TEnemy*) enemy;
 	
 	u8 tile1_x = 0;
 	u8 tile1_y = 0;
@@ -227,6 +238,10 @@ void chase_hero(u8* enemy){ //Fantasmita
 
 			(*p) -= ENEMY_SPEED_X;
 		}
+
+		ptr_enemy->ldf = 2;
+		ptr_enemy->sprite = (u8*) &g_crab_izquierda;
+		left = true;
 	}
 	// Check right
 	else {
@@ -243,6 +258,10 @@ void chase_hero(u8* enemy){ //Fantasmita
 			
 			(*p) += ENEMY_SPEED_X;
 		}
+
+		ptr_enemy->ldf = 3;
+		ptr_enemy->sprite = (u8*) &g_crab_izquierda;
+		right = true;
 	}
 
 	p++;
@@ -258,6 +277,10 @@ void chase_hero(u8* enemy){ //Fantasmita
 			
 			(*p) -= ENEMY_SPEED_Y;
 		}
+
+		if (left)		{ ptr_enemy->ldf = 4; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
+		else if (right)	{ ptr_enemy->ldf = 5; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
+		else 			{ ptr_enemy->ldf = 0; }
 	}
 	// Check down
 	else {
@@ -270,6 +293,10 @@ void chase_hero(u8* enemy){ //Fantasmita
 
 			(*p) += ENEMY_SPEED_Y;
 		}
+
+		if (left)		{ ptr_enemy->ldf = 6; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
+		else if (right)	{ ptr_enemy->ldf = 7; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
+		else 			{ ptr_enemy->ldf = 1; }
 	}
 
 	ptilemap[pixel_to_tile(*(p - 1), (*p))] = PROVISIONAL_ENEMY_OCUPIED_TILE_ID;
@@ -334,7 +361,8 @@ void draw_enemies(){
 	for(u8 i=0;i<MAX_ENEMIES_SCREEN;++i){
 		if(enemies[i].lives > 0){
 			if (video_isInsideViewport(screen_x, screen_y, enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT)){
-		    	cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), enemies[i].x - screen_x, enemies[i].y - screen_y), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
+		    	//cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(), enemies[i].x - screen_x, enemies[i].y - screen_y), 200, ENEMY_WIDTH, ENEMY_HEIGHT);
+				cpct_drawSpriteMasked(enemies[i].sprite, cpct_getScreenPtr(video_getBackBufferPtr(), enemies[i].x - screen_x, enemies[i].y - screen_y), ENEMY_WIDTH, ENEMY_HEIGHT);
 	    	}
 		}
 	}
@@ -359,6 +387,7 @@ void init_hero(){
 	hero.x = HERO_START_X_RELATIVE;
 	hero.y = HERO_START_Y_RELATIVE;
 	hero.lives = 1;
+	hero.sprite = (u8*) &g_hero_frontal;
 }
 
 void next_level(){
@@ -490,6 +519,7 @@ void update_hero(){
 		}
 
 		hero.ldf = 2;
+		hero.sprite = (u8*) &g_hero_lateral_izquierda;
 		left = true;
 		if(hero.teletransportation) return;
 	}
@@ -525,6 +555,7 @@ void update_hero(){
 		}
 
 		hero.ldf = 3;
+		hero.sprite = (u8*) &g_hero_lateral_derecha;
 		right = true;
 		if(hero.teletransportation) return;
 	}
@@ -555,9 +586,9 @@ void update_hero(){
 			hero.y -= HERO_SPEED_Y;
 		}
 
-		if (left)		{ hero.ldf = 4; }
-		else if (right)	{ hero.ldf = 5; }
-		else 			{ hero.ldf = 0; }
+		if (left)		{ hero.ldf = 4; hero.sprite = (u8*) &g_hero_superior_izquierda; }
+		else if (right)	{ hero.ldf = 5; hero.sprite = (u8*) &g_hero_superior_derecha; }
+		else 			{ hero.ldf = 0; hero.sprite = (u8*) &g_hero_trasera; }
 	}
 
 	if (cpct_isKeyPressed(keys.down)){
@@ -586,9 +617,9 @@ void update_hero(){
 			hero.y += HERO_SPEED_Y;
 		}
 
-		if (left)		{ hero.ldf = 6; }
-		else if (right)	{ hero.ldf = 7; }
-		else 			{ hero.ldf = 1; }
+		if (left)		{ hero.ldf = 6; hero.sprite = (u8*) &g_hero_frontal; }
+		else if (right)	{ hero.ldf = 7; hero.sprite = (u8*) &g_hero_frontal; }
+		else 			{ hero.ldf = 1; hero.sprite = (u8*) &g_hero_frontal; }
 	}
 
 	if(cpct_isKeyPressed(keys.shot)){
@@ -598,7 +629,8 @@ void update_hero(){
 }
 
 void draw_hero(){
-	cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(),hero.x - screen_x, hero.y - screen_y), 130, HERO_WIDTH, HERO_HEIGHT);
+	//cpct_drawSolidBox(cpct_getScreenPtr(video_getBackBufferPtr(),hero.x - screen_x, hero.y - screen_y), 130, HERO_WIDTH, HERO_HEIGHT);
+	cpct_drawSpriteMasked(hero.sprite, cpct_getScreenPtr(video_getBackBufferPtr(), hero.x - screen_x, hero.y - screen_y), HERO_WIDTH, HERO_HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
