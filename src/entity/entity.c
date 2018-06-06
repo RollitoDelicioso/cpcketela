@@ -13,14 +13,23 @@
 #include <sprites/hero_superior_izquierda.h>
 #include <sprites/hero_superior_derecha.h>
 #include <sprites/crab_frontal.h>
+#include <sprites/crab_trasera.h>
 #include <sprites/crab_izquierda.h>
+#include <sprites/crab_derecha.h>
 #include <sprites/crab_superior_izquierda.h>
+#include <sprites/crab_superior_derecha.h>
 #include <sprites/wizard_frontal.h>
 #include <sprites/wizard_trasera.h>
 #include <sprites/wizard_izquierda.h>
 #include <sprites/wizard_derecha.h>
 #include <sprites/wizard_superior_izquierda.h>
 #include <sprites/wizard_superior_derecha.h>
+#include <sprites/demon_frontal.h>
+#include <sprites/demon_trasera.h>
+#include <sprites/demon_lateral_izquierda.h>
+#include <sprites/demon_lateral_derecha.h>
+#include <sprites/demon_inferior_izquierda.h>
+#include <sprites/demon_inferior_derecha.h>
 
 #define INIT_BULLET {0xFF, 0, 0}
 #define INIT_OBJECTIVE_BULLET {0xFF, 0, 0, 0, 0, 0x0000}
@@ -142,7 +151,45 @@ void add_score(u8* picked){
 	print_score();
 }
 
-void shot_objective(u8* enemy){
+void shot_objective(u8* enemy){		// Demon loquillo
+	
+	bool left = false, right = false;
+	u8* p = enemy;
+	TEnemy* ptr_enemy = (TEnemy*) enemy;
+
+	// Check left
+	if (hero.x < (*p)){
+
+		ptr_enemy->ldf = 2;
+		ptr_enemy->sprite = (u8*) &g_demon_lateral_izquierda;
+		left = true;
+	}
+	// Check right
+	else {
+
+		ptr_enemy->ldf = 3;
+		ptr_enemy->sprite = (u8*) &g_demon_lateral_derecha;
+		right = true;
+	}
+
+	p++;
+
+	// Check up
+	if (hero.y < (*p)){
+
+		if (left)		{ ptr_enemy->ldf = 4; ptr_enemy->sprite = (u8*) &g_demon_lateral_izquierda; }
+		else if (right)	{ ptr_enemy->ldf = 5; ptr_enemy->sprite = (u8*) &g_demon_lateral_izquierda; }
+		else 			{ ptr_enemy->ldf = 0; ptr_enemy->sprite = (u8*) &g_demon_trasera; }
+	}
+	// Check down
+	else {
+
+		if (left)		{ ptr_enemy->ldf = 6; ptr_enemy->sprite = (u8*) &g_demon_inferior_izquierda; }
+		else if (right)	{ ptr_enemy->ldf = 7; ptr_enemy->sprite = (u8*) &g_demon_inferior_derecha; }
+		else 			{ ptr_enemy->ldf = 1; ptr_enemy->sprite = (u8*) &g_demon_frontal; }
+	}
+
+	// Objective shot
 	shot(2, enemy);
 }
 
@@ -226,9 +273,9 @@ void chase_and_shot(u8* enemy){ //Wizard Loquillo
 	shot(1, enemy);
 }
 
-void just_objective_shot(u8* enemy){ // Demon loquillo
+/*void just_objective_shot(u8* enemy){ // Demon loquillo
 
-}
+}*/
 
 void chase_hero(u8* enemy){ //Fantasmita
 	bool left = false, right = false;
@@ -282,7 +329,7 @@ void chase_hero(u8* enemy){ //Fantasmita
 		}
 
 		ptr_enemy->ldf = 3;
-		ptr_enemy->sprite = (u8*) &g_crab_izquierda;
+		ptr_enemy->sprite = (u8*) &g_crab_derecha;
 		right = true;
 	}
 
@@ -300,9 +347,9 @@ void chase_hero(u8* enemy){ //Fantasmita
 			(*p) -= ENEMY_SPEED_Y;
 		}
 
-		if (left)		{ ptr_enemy->ldf = 4; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
-		else if (right)	{ ptr_enemy->ldf = 5; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
-		else 			{ ptr_enemy->ldf = 0; }
+		if (left)		{ ptr_enemy->ldf = 4; ptr_enemy->sprite = (u8*) &g_crab_superior_izquierda; }
+		else if (right)	{ ptr_enemy->ldf = 5; ptr_enemy->sprite = (u8*) &g_crab_superior_derecha; }
+		else 			{ ptr_enemy->ldf = 0; ptr_enemy->sprite = (u8*) &g_crab_trasera;}
 	}
 	// Check down
 	else {
@@ -316,9 +363,9 @@ void chase_hero(u8* enemy){ //Fantasmita
 			(*p) += ENEMY_SPEED_Y;
 		}
 
-		if (left)		{ ptr_enemy->ldf = 6; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
-		else if (right)	{ ptr_enemy->ldf = 7; ptr_enemy->sprite = (u8*) &g_crab_izquierda; }
-		else 			{ ptr_enemy->ldf = 1; }
+		if (left)		{ ptr_enemy->ldf = 6; ptr_enemy->sprite = (u8*) &g_crab_frontal; }
+		else if (right)	{ ptr_enemy->ldf = 7; ptr_enemy->sprite = (u8*) &g_crab_frontal; }
+		else 			{ ptr_enemy->ldf = 1; ptr_enemy->sprite = (u8*) &g_crab_frontal; }
 	}
 
 	ptilemap[pixel_to_tile(*(p - 1), (*p))] = PROVISIONAL_ENEMY_OCUPIED_TILE_ID;

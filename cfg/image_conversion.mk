@@ -61,8 +61,11 @@ $(eval $(call IMG2SPRITES,img/hero_superior_derecha.png,0,g,8,16,$(PALETTE),mask
 
 ## Enemy sprites - Crab
 $(eval $(call IMG2SPRITES,img/crab_frontal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/crab_trasera.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 $(eval $(call IMG2SPRITES,img/crab_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/crab_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 $(eval $(call IMG2SPRITES,img/crab_superior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/crab_superior_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 
 ## Enemy sprites - Wizard
 $(eval $(call IMG2SPRITES,img/wizard_frontal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
@@ -71,6 +74,14 @@ $(eval $(call IMG2SPRITES,img/wizard_izquierda.png,0,g,8,16,$(PALETTE),mask,src/
 $(eval $(call IMG2SPRITES,img/wizard_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 $(eval $(call IMG2SPRITES,img/wizard_superior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 $(eval $(call IMG2SPRITES,img/wizard_superior_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+
+## Enemy sprites - Demon
+$(eval $(call IMG2SPRITES,img/demon_frontal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/demon_trasera.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/demon_lateral_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/demon_lateral_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/demon_inferior_izquierda.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
+$(eval $(call IMG2SPRITES,img/demon_inferior_derecha.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
 
 ## Enemy sprites - Monster portals
 $(eval $(call IMG2SPRITES,img/monster_portal.png,0,g,8,16,$(PALETTE),mask,src/sprites,))
