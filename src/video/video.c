@@ -1,7 +1,7 @@
 // Required Include files
 #include <cpctelera.h>
 #include "video/video.h"
-#include "tilemap/building.h"
+#include "tilemap/map1.h"
 #include "constants.h"
 
 // Global variable pointing to the present memory used as back buffer

@@ -22,7 +22,7 @@
 #include "video/video.h"
 #include "entity/entity.h"
 #include <tilemap/tileset.h>              // Automatically generated tileset arrays declarations
-#include <tilemap/building.h>             // Automatically generated g_building tilemap declarations
+#include <tilemap/map1.h>             // Automatically generated g_building tilemap declarations
 #include "maps/maps.h"
 
 u16 offset = 0;  	// Offset in tiles of the start of the view window in the g_building tilemap
@@ -85,7 +85,7 @@ void game(){
 
 	init_hero();
 	initialize();
-	map_load((u8*) &maps_000);
+	map_load((u8*) &maps_001);
 
 	while (hero.lives > 0){
 		run_engine();

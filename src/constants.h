@@ -29,9 +29,14 @@
 #define OBJECT_WIDTH 4
 #define OBJECT_HEIGHT 16
 
-#define MAX_ENEMIES_SCREEN 30
+#define MAX_ENEMIES_SCREEN 40
 #define MAX_PORTALS_SCREEN 4
 #define MAX_OBJECTS_SCREEN 2
+
+#define MAX_NUMBER_OF_UPDATED_ENEMYS 5
+#define START_ITERATION 0
+#define END_ITERATION MAX_ENEMIES_SCREEN
+
 
 #define MAX_BULLETS_HERO 2
 #define MAX_BULLETS_ENEMY 3
@@ -90,6 +95,10 @@
 
 // Needs 16 bytes 
 #define OBSTACLE_CREATE_RECTANGLE(X1,Y1,X2,Y2) X1,Y1,X2,Y1,X2,Y1,X2,Y2,X1,Y2,X2,Y2,X1,Y1,X1,Y2,
+#define OBSTACLE_CREATE_LINE(X1,Y1,X2,Y2) X1,Y1,X2,Y2,
+#define OBSTACLE_CREATE_DIAGONAL_LINE(X1,Y1,X2,Y2) X1,Y1,X2,Y2,
+
+#define GENERATOR_CREATE(X1,Y1) X1,Y1,
 
 // Pre-calculate the offset in bytes at which the viewport has to be drawn. This place will
 // be the same in relative coordinates. For instance, standard video memory starts at 0xC000.
